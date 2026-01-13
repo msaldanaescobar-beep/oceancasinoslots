@@ -76,17 +76,32 @@ function Casino() {
     <div style={styles.card}>
       <h2>🎰 Casino</h2>
 
-      <p style={styles.bonus}>Saldo disponible:</p>
-      <h3 style={styles.bonusBig}>$10.000 CLP</h3>
+      {/* Bono reforzado */}
+      <p style={styles.bonus}>🎁 Bono de Bienvenida Activo</p>
+      <h3 style={styles.bonusBig}>$10.000 CLP GRATIS</h3>
 
-      <button style={styles.button}>
+      {/* Simulación de actividad */}
+      <p style={{ fontSize: 12, opacity: 0.8 }}>
+        👥 128 jugadores conectados ahora
+      </p>
+
+      {/* Botón Slots con feedback */}
+      <button
+        style={styles.button}
+        onClick={() => alert("🎰 Slot girando... ¡Buena suerte!")}
+      >
         JUGAR SLOTS
       </button>
 
-      <button style={{ ...styles.button, marginTop: 10 }}>
+      {/* Botón Ruleta con feedback */}
+      <button
+        style={{ ...styles.button, marginTop: 10 }}
+        onClick={() => alert("🎡 Ruleta girando...")}
+      >
         RULETA
       </button>
 
+      {/* Botón afiliado (por ahora puede quedar con placeholder) */}
       <button
         style={{
           ...styles.button,
@@ -100,9 +115,24 @@ function Casino() {
       >
         JUGAR CON DINERO REAL
       </button>
+
+      {/* Tip psicológico */}
+      <p style={{ marginTop: 12, fontSize: 12, color: "#00FFD1" }}>
+        💡 Tip: juega primero gratis y luego decide si quieres jugar con dinero real
+      </p>
+
+      {/* Aviso legal mínimo */}
+      <p style={{ marginTop: 16, fontSize: 11, opacity: 0.7 }}>
+        Oceancasinoslots es una plataforma de entretenimiento.
+        <br />
+        No operamos juegos con dinero real.
+        <br />
+        Los enlaces externos dirigen a plataformas de terceros con licencia.
+      </p>
     </div>
   );
 }
+
 
 const styles = {
   app: {
