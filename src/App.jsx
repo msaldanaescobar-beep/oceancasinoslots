@@ -1,4 +1,5 @@
 import { useState } from "react";
+import bgCasino from "./bg-casino.png";
 
 export default function App() {
   const [view, setView] = useState("home");
@@ -17,13 +18,15 @@ export default function App() {
 function Home({ setView }) {
   return (
     <div style={styles.background}>
-      <img src="/ChatGPT Image 13 ene 2026, 05_10_20 p.m..png" style={styles.bgImage} alt="casino" />
+      <img src={bgCasino} style={styles.bgImage} alt="Oceancasinoslots" />
 
+      {/* REGISTRO */}
       <div
         style={styles.hotspotRegister}
         onClick={() => setView("register")}
       />
 
+      {/* BONO / DESCARGA */}
       <div
         style={styles.hotspotBonus}
         onClick={() => setView("bonus")}
@@ -131,14 +134,13 @@ const styles = {
     objectFit: "cover"
   },
 
+  /* HOTSPOTS (puedes ajustar luego) */
   hotspotRegister: {
     position: "absolute",
     top: "40%",
     left: "15%",
     width: "70%",
     height: "20%",
-    background: "rgba(255,0,0,0.35)",
-    border: "2px dashed red",
     cursor: "pointer"
   },
 
@@ -148,8 +150,6 @@ const styles = {
     left: "15%",
     width: "70%",
     height: "15%",
-    background: "rgba(0,255,0,0.35)",
-    border: "2px dashed lime",
     cursor: "pointer"
   },
 
