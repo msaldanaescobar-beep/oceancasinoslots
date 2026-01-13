@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 
 export default function App() {
@@ -76,16 +77,13 @@ function Casino() {
     <div style={styles.card}>
       <h2>🎰 Casino</h2>
 
-      {/* Bono reforzado */}
       <p style={styles.bonus}>🎁 Bono de Bienvenida Activo</p>
       <h3 style={styles.bonusBig}>$10.000 CLP GRATIS</h3>
 
-      {/* Simulación de actividad */}
       <p style={{ fontSize: 12, opacity: 0.8 }}>
         👥 128 jugadores conectados ahora
       </p>
 
-      {/* Botón Slots con feedback */}
       <button
         style={styles.button}
         onClick={() => alert("🎰 Slot girando... ¡Buena suerte!")}
@@ -93,7 +91,6 @@ function Casino() {
         JUGAR SLOTS
       </button>
 
-      {/* Botón Ruleta con feedback */}
       <button
         style={{ ...styles.button, marginTop: 10 }}
         onClick={() => alert("🎡 Ruleta girando...")}
@@ -101,7 +98,6 @@ function Casino() {
         RULETA
       </button>
 
-      {/* Botón afiliado (por ahora puede quedar con placeholder) */}
       <button
         style={{
           ...styles.button,
@@ -116,12 +112,10 @@ function Casino() {
         JUGAR CON DINERO REAL
       </button>
 
-      {/* Tip psicológico */}
       <p style={{ marginTop: 12, fontSize: 12, color: "#00FFD1" }}>
         💡 Tip: juega primero gratis y luego decide si quieres jugar con dinero real
       </p>
 
-      {/* Aviso legal mínimo */}
       <p style={{ marginTop: 16, fontSize: 11, opacity: 0.7 }}>
         Oceancasinoslots es una plataforma de entretenimiento.
         <br />
@@ -133,44 +127,34 @@ function Casino() {
   );
 }
 
-
 const styles = {
   app: {
-  minHeight: "100vh",
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-  backgroundImage: "url('public/bg-casino.png
-')",
-  backgroundSize: "cover",
-  backgroundPosition: "center",
-  backgroundRepeat: "no-repeat"
-},
+    minHeight: "100vh",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundImage: "url('/bg-casino.png')",
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+    backgroundRepeat: "no-repeat"
+  },
 
   card: {
-    background: "#062F4F",
+    background: "rgba(6, 47, 79, 0.92)",
     padding: 24,
     borderRadius: 16,
     width: "90%",
     maxWidth: 360,
     textAlign: "center",
-    boxShadow: "0 10px 30px rgba(0,0,0,0.4)"
+    boxShadow: "0 10px 30px rgba(0,0,0,0.4)",
+    color: "#fff"
   },
-  title: {
-    marginBottom: 8
-  },
-  subtitle: {
-    marginBottom: 16,
-    opacity: 0.9
-  },
-  bonus: {
-    marginTop: 16,
-    color: "#00FFD1"
-  },
-  bonusBig: {
-    color: "#00FFD1",
-    fontSize: 28
-  },
+
+  title: { marginBottom: 8 },
+  subtitle: { marginBottom: 16, opacity: 0.9 },
+  bonus: { marginTop: 16, color: "#00FFD1" },
+  bonusBig: { color: "#00FFD1", fontSize: 28 },
+
   input: {
     width: "100%",
     padding: 12,
@@ -178,6 +162,7 @@ const styles = {
     borderRadius: 8,
     border: "none"
   },
+
   button: {
     width: "100%",
     padding: 14,
@@ -189,10 +174,7 @@ const styles = {
     fontSize: 16,
     cursor: "pointer"
   },
-  small: {
-    marginTop: 12,
-    fontSize: 12,
-    opacity: 0.8
-  }
+
+  small: { marginTop: 12, fontSize: 12, opacity: 0.8 }
 };
 
