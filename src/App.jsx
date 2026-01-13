@@ -140,7 +140,8 @@ const styles = {
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
-  backgroundImage: "url('/bg-casino.png')",
+  backgroundImage: "url('public/bg-casino.png
+')",
   backgroundSize: "cover",
   backgroundPosition: "center",
   backgroundRepeat: "no-repeat"
