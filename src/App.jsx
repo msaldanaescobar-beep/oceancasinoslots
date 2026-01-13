@@ -75,11 +75,30 @@ function Casino() {
   return (
     <div style={styles.card}>
       <h2>🎰 Casino</h2>
+
       <p style={styles.bonus}>Saldo disponible:</p>
       <h3 style={styles.bonusBig}>$10.000 CLP</h3>
-      <button style={styles.button}>JUGAR SLOTS</button>
+
+      <button style={styles.button}>
+        JUGAR SLOTS
+      </button>
+
       <button style={{ ...styles.button, marginTop: 10 }}>
         RULETA
+      </button>
+
+      <button
+        style={{
+          ...styles.button,
+          marginTop: 10,
+          background: "#FFD700",
+          color: "#04293A"
+        }}
+        onClick={() =>
+          window.open("https://TUCASINOAFILIADO.com", "_blank")
+        }
+      >
+        JUGAR CON DINERO REAL
       </button>
     </div>
   );
