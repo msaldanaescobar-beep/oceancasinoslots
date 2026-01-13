@@ -133,7 +133,7 @@ const styles = {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    backgroundImage: "url('/bg-casino.png')",
+    backgroundImage: "url('/ChatGPT Image 13 ene 2026, 05_10_20 p.m..png')",
     backgroundSize: "cover",
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat"
