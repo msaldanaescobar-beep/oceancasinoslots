@@ -1,4 +1,4 @@
-import { useState } from "react";
+aimport { useState } from "react";
 
 export default function App() {
   const [view, setView] = useState("home");
@@ -134,22 +134,27 @@ const styles = {
   },
 
   hotspotRegister: {
-    position: "absolute",
-    top: "40%",
-    left: "15%",
-    width: "70%",
-    height: "20%",
-    cursor: "pointer"
-  },
+  position: "absolute",
+  top: "40%",
+  left: "15%",
+  width: "70%",
+  height: "20%",
+  background: "rgba(255,0,0,0.35)",
+  border: "2px dashed red",
+  cursor: "pointer"
+},
 
-  hotspotBonus: {
-    position: "absolute",
-    bottom: "10%",
-    left: "15%",
-    width: "70%",
-    height: "15%",
-    cursor: "pointer"
-  },
+hotspotBonus: {
+  position: "absolute",
+  bottom: "10%",
+  left: "15%",
+  width: "70%",
+  height: "15%",
+  background: "rgba(0,255,0,0.35)",
+  border: "2px dashed lime",
+  cursor: "pointer"
+},
+
 
   overlay: {
     minHeight: "100vh",
