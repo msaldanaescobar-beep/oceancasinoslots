@@ -7,7 +7,6 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     <App />
   </React.StrictMode>
 );
-
 const style = document.createElement("style");
 style.innerHTML = `
 @keyframes pulse {
