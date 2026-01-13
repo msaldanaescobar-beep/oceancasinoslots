@@ -8,6 +8,8 @@ export default function App() {
       {view === "home" && <Home setView={setView} />}
       {view === "register" && <Register setView={setView} />}
       {view === "bonus" && <Bonus setView={setView} />}
+      {view === "installing" && <Installing />}
+      {view === "casino" && <Casino />}
     </div>
   );
 }
@@ -39,15 +41,46 @@ function Register({ setView }) {
 }
 
 function Bonus({ setView }) {
+  const handleDownload = () => {
+    setView("installing");
+    setTimeout(() => {
+      setView("casino");
+    }, 2500);
+  };
+
   return (
     <div style={styles.card}>
       <h2>🎉 Cuenta creada</h2>
       <p>Descarga nuestra app y recibe</p>
       <h3 style={styles.bonusBig}>$10.000 CLP</h3>
-      <button style={styles.button}>
+      <button style={styles.button} onClick={handleDownload}>
         DESCARGAR APP
       </button>
-      <p style={styles.small}>Disponible para Android</p>
+      <p style={styles.small}>Android · Descarga segura</p>
+    </div>
+  );
+}
+
+function Installing() {
+  return (
+    <div style={styles.card}>
+      <h2>📲 Instalando app</h2>
+      <p>Preparando tu bono...</p>
+      <div style={{ marginTop: 20 }}>⏳</div>
+    </div>
+  );
+}
+
+function Casino() {
+  return (
+    <div style={styles.card}>
+      <h2>🎰 Casino</h2>
+      <p style={styles.bonus}>Saldo disponible:</p>
+      <h3 style={styles.bonusBig}>$10.000 CLP</h3>
+      <button style={styles.button}>JUGAR SLOTS</button>
+      <button style={{ ...styles.button, marginTop: 10 }}>
+        RULETA
+      </button>
     </div>
   );
 }
