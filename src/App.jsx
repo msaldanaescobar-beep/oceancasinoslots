@@ -169,19 +169,20 @@ const styles = {
   },
 
   hotspot: {
-    position: "absolute",
-    transform: "translate(-50%, -50%)",
-    padding: "14px 26px",
-    borderRadius: 14,
-    border: "none",
-    background: "#00FFD1",
-    color: "#04293A",
-    fontWeight: "bold",
-    fontSize: 16,
-    cursor: "pointer",
-    boxShadow: "0 8px 20px rgba(0,0,0,0.5)",
-    zIndex: 10
-  },
+  position: "absolute",
+  transform: "translate(-50%, -50%)",
+  padding: "14px 26px",
+  borderRadius: 14,
+  border: "none",
+  background: "#00FFD1",
+  color: "#04293A",
+  fontWeight: "bold",
+  fontSize: 16,
+  cursor: "pointer",
+  zIndex: 10,
+  boxShadow: "0 0 0 rgba(0,255,209,0.7)",
+  animation: "pulse 2s infinite"
+},
 
   card: {
     background: "#062F4F",
@@ -206,10 +207,7 @@ const styles = {
   button: {
     width: "100%",
     padding: 14,
-    borderRadius: 10,
-    border: "none",
-    background: "#00FFD1",
-    color: "#04293A",
+    borderRa04293A",
     fontWeight: "bold",
     fontSize: 16,
     cursor: "pointer"
