@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 
 export default function App() {
@@ -17,25 +16,32 @@ export default function App() {
 
 function Home({ setView }) {
   return (
-    <div style={styles.card}>
-      <h1 style={styles.title}>🌊 Oceancasinoslots</h1>
-      <p style={styles.subtitle}>Casino & Slots Online</p>
-      <button style={styles.button} onClick={() => setView("register")}>
-        REGÍSTRATE Y JUEGA
-      </button>
-      <p style={styles.bonus}>🎁 Bono de bienvenida $10.000 CLP</p>
+    <div style={styles.background}>
+      <img src="/ChatGPT Image 13 ene 2026, 05_10_20 p.m..png" style={styles.bgImage} alt="casino" />
+
+      {/* Zona REGISTRO */}
+      <div
+        style={styles.hotspotRegister}
+        onClick={() => setView("register")}
+      />
+
+      {/* Zona BONO / DESCARGA */}
+      <div
+        style={styles.hotspotBonus}
+        onClick={() => setView("bonus")}
+      />
     </div>
   );
 }
 
 function Register({ setView }) {
   return (
-    <div style={styles.card}>
+    <div style={styles.overlay}>
       <h2>Crear cuenta</h2>
       <input style={styles.input} placeholder="Correo electrónico" />
       <input style={styles.input} type="password" placeholder="Contraseña" />
       <button style={styles.button} onClick={() => setView("bonus")}>
-        CREAR CUENTA
+        CONTINUAR
       </button>
     </div>
   );
@@ -44,49 +50,38 @@ function Register({ setView }) {
 function Bonus({ setView }) {
   const handleDownload = () => {
     setView("installing");
-    setTimeout(() => {
-      setView("casino");
-    }, 2500);
+    setTimeout(() => setView("casino"), 2500);
   };
 
   return (
-    <div style={styles.card}>
-      <h2>🎉 Cuenta creada</h2>
-      <p>Descarga nuestra app y recibe</p>
-      <h3 style={styles.bonusBig}>$10.000 CLP</h3>
+    <div style={styles.overlay}>
+      <h2>🎁 Bono activado</h2>
+      <h1 style={{ color: "#00FFD1" }}>$10.000 CLP</h1>
       <button style={styles.button} onClick={handleDownload}>
         DESCARGAR APP
       </button>
-      <p style={styles.small}>Android · Descarga segura</p>
     </div>
   );
 }
 
 function Installing() {
   return (
-    <div style={styles.card}>
-      <h2>📲 Instalando app</h2>
+    <div style={styles.overlay}>
+      <h2>📲 Instalando</h2>
       <p>Preparando tu bono...</p>
-      <div style={{ marginTop: 20 }}>⏳</div>
+      <div style={{ fontSize: 32 }}>⏳</div>
     </div>
   );
 }
 
 function Casino() {
   return (
-    <div style={styles.card}>
+    <div style={styles.overlay}>
       <h2>🎰 Casino</h2>
-
-      <p style={styles.bonus}>🎁 Bono de Bienvenida Activo</p>
-      <h3 style={styles.bonusBig}>$10.000 CLP GRATIS</h3>
-
-      <p style={{ fontSize: 12, opacity: 0.8 }}>
-        👥 128 jugadores conectados ahora
-      </p>
 
       <button
         style={styles.button}
-        onClick={() => alert("🎰 Slot girando... ¡Buena suerte!")}
+        onClick={() => alert("🎰 Slot girando...")}
       >
         JUGAR SLOTS
       </button>
@@ -112,16 +107,8 @@ function Casino() {
         JUGAR CON DINERO REAL
       </button>
 
-      <p style={{ marginTop: 12, fontSize: 12, color: "#00FFD1" }}>
-        💡 Tip: juega primero gratis y luego decide si quieres jugar con dinero real
-      </p>
-
-      <p style={{ marginTop: 16, fontSize: 11, opacity: 0.7 }}>
-        Oceancasinoslots es una plataforma de entretenimiento.
-        <br />
-        No operamos juegos con dinero real.
-        <br />
-        Los enlaces externos dirigen a plataformas de terceros con licencia.
+      <p style={{ marginTop: 12, fontSize: 11, opacity: 0.7 }}>
+        Plataforma de entretenimiento · +18
       </p>
     </div>
   );
@@ -130,33 +117,55 @@ function Casino() {
 const styles = {
   app: {
     minHeight: "100vh",
+    background: "#000"
+  },
+
+  background: {
+    position: "relative",
+    width: "100%",
+    height: "100vh",
+    overflow: "hidden"
+  },
+
+  bgImage: {
+    width: "100%",
+    height: "100%",
+    objectFit: "cover"
+  },
+
+  hotspotRegister: {
+    position: "absolute",
+    top: "40%",
+    left: "15%",
+    width: "70%",
+    height: "20%",
+    cursor: "pointer"
+  },
+
+  hotspotBonus: {
+    position: "absolute",
+    bottom: "10%",
+    left: "15%",
+    width: "70%",
+    height: "15%",
+    cursor: "pointer"
+  },
+
+  overlay: {
+    minHeight: "100vh",
+    background: "rgba(0,0,0,0.85)",
     display: "flex",
+    flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    backgroundImage: "url('/ChatGPT Image 13 ene 2026, 05_10_20 p.m..png')",
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    backgroundRepeat: "no-repeat"
-  },
-
-  card: {
-    background: "rgba(6, 47, 79, 0.92)",
     padding: 24,
-    borderRadius: 16,
-    width: "90%",
-    maxWidth: 360,
-    textAlign: "center",
-    boxShadow: "0 10px 30px rgba(0,0,0,0.4)",
-    color: "#fff"
+    color: "#fff",
+    textAlign: "center"
   },
-
-  title: { marginBottom: 8 },
-  subtitle: { marginBottom: 16, opacity: 0.9 },
-  bonus: { marginTop: 16, color: "#00FFD1" },
-  bonusBig: { color: "#00FFD1", fontSize: 28 },
 
   input: {
     width: "100%",
+    maxWidth: 300,
     padding: 12,
     marginBottom: 12,
     borderRadius: 8,
@@ -165,6 +174,7 @@ const styles = {
 
   button: {
     width: "100%",
+    maxWidth: 300,
     padding: 14,
     borderRadius: 10,
     border: "none",
@@ -173,8 +183,5 @@ const styles = {
     fontWeight: "bold",
     fontSize: 16,
     cursor: "pointer"
-  },
-
-  small: { marginTop: 12, fontSize: 12, opacity: 0.8 }
+  }
 };
-
