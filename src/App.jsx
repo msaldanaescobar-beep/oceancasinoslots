@@ -1,4 +1,4 @@
-aimport { useState } from "react";
+import { useState } from "react";
 
 export default function App() {
   const [view, setView] = useState("home");
@@ -19,13 +19,11 @@ function Home({ setView }) {
     <div style={styles.background}>
       <img src="/ChatGPT Image 13 ene 2026, 05_10_20 p.m..png" style={styles.bgImage} alt="casino" />
 
-      {/* Zona REGISTRO */}
       <div
         style={styles.hotspotRegister}
         onClick={() => setView("register")}
       />
 
-      {/* Zona BONO / DESCARGA */}
       <div
         style={styles.hotspotBonus}
         onClick={() => setView("bonus")}
@@ -134,26 +132,26 @@ const styles = {
   },
 
   hotspotRegister: {
-   position: "absolute",
-   top: "40%",
-   left: "15%",
-   width: "70%",
-   height: "20%",
-   background: "rgba(255,0,0,0.35)",
-   border: "2px dashed red",
-   cursor: "pointer"
- },
+    position: "absolute",
+    top: "40%",
+    left: "15%",
+    width: "70%",
+    height: "20%",
+    background: "rgba(255,0,0,0.35)",
+    border: "2px dashed red",
+    cursor: "pointer"
+  },
 
   hotspotBonus: {
-   position: "absolute",
-   bottom: "10%",
-   left: "15%",
-   width: "70%",
-   height: "15%",
-   background: "rgba(0,255,0,0.35)",
-   border: "2px dashed lime",
-   cursor: "pointer"
- },
+    position: "absolute",
+    bottom: "10%",
+    left: "15%",
+    width: "70%",
+    height: "15%",
+    background: "rgba(0,255,0,0.35)",
+    border: "2px dashed lime",
+    cursor: "pointer"
+  },
 
   overlay: {
     minHeight: "100vh",
