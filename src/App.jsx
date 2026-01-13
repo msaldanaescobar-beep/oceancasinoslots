@@ -5,51 +5,64 @@ export default function App() {
 
   return (
     <div style={styles.app}>
-      {view === "home" && <Home setView={setView} />}
-      {view === "register" && <Register setView={setView} />}
-      {view === "bonus" && <Bonus setView={setView} />}
-      {view === "installing" && <Installing />}
-      {view === "casino" && <Casino />}
+      <div style={styles.overlay}>
+
+        {view === "home" && <Home setView={setView} />}
+        {view === "register" && <Register setView={setView} />}
+        {view === "bonus" && <Bonus setView={setView} />}
+        {view === "installing" && <Installing />}
+        {view === "casino" && <Casino />}
+
+      </div>
     </div>
   );
 }
+
+/* ---------------- HOME (HOTSPOTS) ---------------- */
 
 function Home({ setView }) {
   return (
-    <div style={styles.background}>
-      <img
-        src="/bg-casino.png"
-        alt="Oceancasinoslots"
-        style={styles.bgImage}
-      />
+    <>
+      <button
+        style={{ ...styles.hotspot, top: "52%", left: "50%" }}
+        onClick={() => setView("casino")}
+      >
+        ENTRAR AL CASINO
+      </button>
 
-      {/* HOTSPOT REGISTRO */}
-      <div
-        style={styles.hotspotRegister}
+      <button
+        style={{ ...styles.hotspot, top: "64%", left: "50%" }}
         onClick={() => setView("register")}
-      />
+      >
+        REGÍSTRATE
+      </button>
 
-      {/* HOTSPOT BONO */}
-      <div
-        style={styles.hotspotBonus}
+      <button
+        style={{ ...styles.hotspot, top: "74%", left: "50%" }}
         onClick={() => setView("bonus")}
-      />
-    </div>
+      >
+        🎁 BONO $10.000
+      </button>
+    </>
   );
 }
 
+/* ---------------- REGISTRO ---------------- */
+
 function Register({ setView }) {
   return (
-    <div style={styles.overlay}>
+    <div style={styles.card}>
       <h2>Crear cuenta</h2>
       <input style={styles.input} placeholder="Correo electrónico" />
       <input style={styles.input} type="password" placeholder="Contraseña" />
       <button style={styles.button} onClick={() => setView("bonus")}>
-        CONTINUAR
+        CREAR CUENTA
       </button>
     </div>
   );
 }
+
+/* ---------------- BONO ---------------- */
 
 function Bonus({ setView }) {
   const handleDownload = () => {
@@ -58,34 +71,47 @@ function Bonus({ setView }) {
   };
 
   return (
-    <div style={styles.overlay}>
-      <h2>🎁 Bono activado</h2>
-      <h1 style={{ color: "#00FFD1" }}>$10.000 CLP</h1>
+    <div style={styles.card}>
+      <h2>🎉 Cuenta creada</h2>
+      <p>Descarga nuestra app y recibe</p>
+      <h3 style={styles.bonusBig}>$10.000 CLP</h3>
       <button style={styles.button} onClick={handleDownload}>
         DESCARGAR APP
       </button>
+      <p style={styles.small}>Android · Descarga segura</p>
     </div>
   );
 }
+
+/* ---------------- INSTALANDO ---------------- */
 
 function Installing() {
   return (
-    <div style={styles.overlay}>
-      <h2>📲 Instalando</h2>
+    <div style={styles.card}>
+      <h2>📲 Instalando app</h2>
       <p>Preparando tu bono...</p>
-      <div style={{ fontSize: 32 }}>⏳</div>
+      <div style={{ marginTop: 20 }}>⏳</div>
     </div>
   );
 }
 
+/* ---------------- CASINO ---------------- */
+
 function Casino() {
   return (
-    <div style={styles.overlay}>
+    <div style={styles.card}>
       <h2>🎰 Casino</h2>
+
+      <p style={styles.bonus}>🎁 Bono de bienvenida activo</p>
+      <h3 style={styles.bonusBig}>$10.000 CLP GRATIS</h3>
+
+      <p style={{ fontSize: 12, opacity: 0.8 }}>
+        👥 128 jugadores conectados ahora
+      </p>
 
       <button
         style={styles.button}
-        onClick={() => alert("🎰 Slot girando...")}
+        onClick={() => alert("🎰 Slot girando... ¡Buena suerte!")}
       >
         JUGAR SLOTS
       </button>
@@ -111,65 +137,66 @@ function Casino() {
         JUGAR CON DINERO REAL
       </button>
 
-      <p style={{ marginTop: 12, fontSize: 11, opacity: 0.7 }}>
-        Plataforma de entretenimiento · +18
+      <p style={{ marginTop: 12, fontSize: 12, color: "#00FFD1" }}>
+        💡 Tip: juega gratis antes de apostar con dinero real
+      </p>
+
+      <p style={{ marginTop: 16, fontSize: 11, opacity: 0.7 }}>
+        Oceancasinoslots es una plataforma de entretenimiento.
+        <br />
+        No operamos juegos con dinero real.
       </p>
     </div>
   );
 }
 
+/* ---------------- ESTILOS ---------------- */
+
 const styles = {
   app: {
     minHeight: "100vh",
-    background: "#000"
-  },
-
-  background: {
-    position: "relative",
-    width: "100%",
-    height: "100vh",
-    overflow: "hidden"
-  },
-
-  bgImage: {
-    width: "100%",
-    height: "100%",
-    objectFit: "cover"
-  },
-
-  hotspotRegister: {
-    position: "absolute",
-    top: "40%",
-    left: "15%",
-    width: "70%",
-    height: "20%",
-    cursor: "pointer"
-  },
-
-  hotspotBonus: {
-    position: "absolute",
-    bottom: "10%",
-    left: "15%",
-    width: "70%",
-    height: "15%",
-    cursor: "pointer"
+    backgroundImage: "url('/bg-casino.png')",
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+    backgroundRepeat: "no-repeat",
+    position: "relative"
   },
 
   overlay: {
-    minHeight: "100vh",
-    background: "rgba(0,0,0,0.85)",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
+    position: "absolute",
+    inset: 0,
+    background: "rgba(0,0,0,0.45)"
+  },
+
+  hotspot: {
+    position: "absolute",
+    transform: "translate(-50%, -50%)",
+    padding: "14px 26px",
+    borderRadius: 14,
+    border: "none",
+    background: "#00FFD1",
+    color: "#04293A",
+    fontWeight: "bold",
+    fontSize: 16,
+    cursor: "pointer",
+    boxShadow: "0 8px 20px rgba(0,0,0,0.5)",
+    zIndex: 10
+  },
+
+  card: {
+    background: "#062F4F",
     padding: 24,
-    color: "#fff",
-    textAlign: "center"
+    borderRadius: 16,
+    width: "90%",
+    maxWidth: 360,
+    textAlign: "center",
+    boxShadow: "0 10px 30px rgba(0,0,0,0.4)",
+    margin: "auto",
+    marginTop: "20vh"
   },
 
   input: {
     width: "100%",
-    maxWidth: 300,
     padding: 12,
     marginBottom: 12,
     borderRadius: 8,
@@ -178,7 +205,6 @@ const styles = {
 
   button: {
     width: "100%",
-    maxWidth: 300,
     padding: 14,
     borderRadius: 10,
     border: "none",
@@ -187,5 +213,21 @@ const styles = {
     fontWeight: "bold",
     fontSize: 16,
     cursor: "pointer"
+  },
+
+  bonus: {
+    marginTop: 12,
+    color: "#00FFD1"
+  },
+
+  bonusBig: {
+    color: "#00FFD1",
+    fontSize: 28
+  },
+
+  small: {
+    marginTop: 12,
+    fontSize: 12,
+    opacity: 0.8
   }
 };
