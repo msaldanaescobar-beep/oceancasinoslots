@@ -1,44 +1,60 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
+/* ---------------- APP PRINCIPAL ---------------- */
 export default function App() {
   const [view, setView] = useState("home");
+  const [fade, setFade] = useState(true);
+  const isMobile = window.innerWidth <= 480;
+
+  const changeView = (newView) => {
+    setFade(false);
+    setTimeout(() => {
+      setView(newView);
+      setFade(true);
+    }, 250);
+  };
 
   return (
     <div style={styles.app}>
       <div style={styles.overlay}>
-
-        {view === "home" && <Home setView={setView} />}
-        {view === "register" && <Register setView={setView} />}
-        {view === "bonus" && <Bonus setView={setView} />}
-        {view === "installing" && <Installing />}
-        {view === "casino" && <Casino />}
-
+        <div
+          style={{
+            ...styles.fadeContainer,
+            opacity: fade ? 1 : 0,
+            transition: "opacity 250ms ease-in-out"
+          }}
+        >
+          {view === "home" && <Home setView={changeView} isMobile={isMobile} />}
+          {view === "register" && <Register setView={changeView} isMobile={isMobile} />}
+          {view === "bonus" && <Bonus setView={changeView} isMobile={isMobile} />}
+          {view === "installing" && <Installing setView={changeView} />}
+          {view === "casino" && <Casino />}
+        </div>
       </div>
     </div>
   );
 }
 
 /* ---------------- HOME (HOTSPOTS) ---------------- */
-
-function Home({ setView }) {
+function Home({ setView, isMobile }) {
   return (
     <>
       <button
-        style={{ ...styles.hotspot, top: "52%", left: "50%" }}
+        style={{ ...styles.hotspot, top: isMobile ? "48%" : "52%" }}
         onClick={() => setView("casino")}
       >
         ENTRAR AL CASINO
       </button>
 
       <button
-        style={{ ...styles.hotspot, top: "64%", left: "50%" }}
+        style={{ ...styles.hotspot, top: isMobile ? "62%" : "64%" }}
         onClick={() => setView("register")}
       >
         REGÍSTRATE
       </button>
 
       <button
-        style={{ ...styles.hotspot, top: "74%", left: "50%" }}
+        style={{ ...styles.hotspot, top: "74%" }}
         onClick={() => setView("bonus")}
       >
         🎁 BONO $10.000
@@ -48,7 +64,6 @@ function Home({ setView }) {
 }
 
 /* ---------------- REGISTRO ---------------- */
-
 function Register({ setView }) {
   return (
     <div style={styles.card}>
@@ -58,16 +73,15 @@ function Register({ setView }) {
       <button style={styles.button} onClick={() => setView("bonus")}>
         CREAR CUENTA
       </button>
+      <p style={styles.small}>🔒 Registro rápido y seguro</p>
     </div>
   );
 }
 
 /* ---------------- BONO ---------------- */
-
 function Bonus({ setView }) {
   const handleDownload = () => {
     setView("installing");
-    setTimeout(() => setView("casino"), 2500);
   };
 
   return (
@@ -83,20 +97,47 @@ function Bonus({ setView }) {
   );
 }
 
-/* ---------------- INSTALANDO ---------------- */
+/* ---------------- INSTALANDO (PROGRESO REAL) ---------------- */
+function Installing({ setView }) {
+  const [progress, setProgress] = useState(0);
+  const messages = [
+    "Verificando seguridad…",
+    "Descargando archivos…",
+    "Instalando componentes…",
+    "Aplicando bono…",
+    "Finalizando instalación…"
+  ];
 
-function Installing() {
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setProgress((p) => {
+        if (p >= 100) {
+          clearInterval(interval);
+          setTimeout(() => setView("casino"), 800);
+          return 100;
+        }
+        return p + Math.floor(Math.random() * 8) + 3;
+      });
+    }, 600);
+
+    return () => clearInterval(interval);
+  }, [setView]);
+
   return (
     <div style={styles.card}>
       <h2>📲 Instalando app</h2>
-      <p>Preparando tu bono...</p>
-      <div style={{ marginTop: 20 }}>⏳</div>
+      <p>{messages[Math.min(Math.floor(progress / 20), 4)]}</p>
+
+      <div style={styles.progressBar}>
+        <div style={{ ...styles.progressFill, width: `${progress}%` }} />
+      </div>
+
+      <p style={styles.small}>{progress}% completado</p>
     </div>
   );
 }
 
 /* ---------------- CASINO ---------------- */
-
 function Casino() {
   return (
     <div style={styles.card}>
@@ -105,14 +146,11 @@ function Casino() {
       <p style={styles.bonus}>🎁 Bono de bienvenida activo</p>
       <h3 style={styles.bonusBig}>$10.000 CLP GRATIS</h3>
 
-      <p style={{ fontSize: 12, opacity: 0.8 }}>
-        👥 128 jugadores conectados ahora
+      <p style={{ fontSize: 12, opacity: 0.85 }}>
+        👥 128 jugadores jugando ahora
       </p>
 
-      <button
-        style={styles.button}
-        onClick={() => alert("🎰 Slot girando... ¡Buena suerte!")}
-      >
+      <button style={styles.button} onClick={() => alert("🎰 Slot girando...")}>
         JUGAR SLOTS
       </button>
 
@@ -130,75 +168,72 @@ function Casino() {
           background: "#FFD700",
           color: "#04293A"
         }}
-        onClick={() =>
-          window.open("https://TUCASINOAFILIADO.com", "_blank")
-        }
+        onClick={() => window.open("https://TUCASINOAFILIADO.com", "_blank")}
       >
         JUGAR CON DINERO REAL
       </button>
 
-      <p style={{ marginTop: 12, fontSize: 12, color: "#00FFD1" }}>
-        💡 Tip: juega gratis antes de apostar con dinero real
+      <p style={{ marginTop: 14, fontSize: 11, opacity: 0.75 }}>
+        💡 Consejo: juega gratis antes de apostar
       </p>
 
-      <p style={{ marginTop: 16, fontSize: 11, opacity: 0.7 }}>
-        Oceancasinoslots es una plataforma de entretenimiento.
-        <br />
-        No operamos juegos con dinero real.
+      <p style={{ marginTop: 10, fontSize: 10, opacity: 0.6 }}>
+        Plataforma de entretenimiento · +18
       </p>
     </div>
   );
 }
 
 /* ---------------- ESTILOS ---------------- */
-
 const styles = {
   app: {
     minHeight: "100vh",
     backgroundImage: "url('/bg-casino.png')",
     backgroundSize: "cover",
     backgroundPosition: "center",
-    backgroundRepeat: "no-repeat",
     position: "relative"
   },
 
   overlay: {
     position: "absolute",
     inset: 0,
-    background: "rgba(0,0,0,0.45)"
+    background: "rgba(0,0,0,0.5)"
+  },
+
+  fadeContainer: {
+    width: "100%",
+    height: "100%"
   },
 
   hotspot: {
     position: "absolute",
+    left: "50%",
     transform: "translate(-50%, -50%)",
-    padding: "14px 26px",
+    padding: "16px 30px",
     borderRadius: 14,
     border: "none",
     background: "#00FFD1",
     color: "#04293A",
     fontWeight: "bold",
-    fontSize: 16,
+    fontSize: 18,
     cursor: "pointer",
-    zIndex: 10,
-    boxShadow: "0 0 0 rgba(0,255,209,0.7)",
     animation: "pulse 2s infinite"
   },
 
   card: {
-    background: "#062F4F",
-    padding: 24,
+    background: "rgba(6,47,79,0.92)",
+    backdropFilter: "blur(6px)",
+    padding: 22,
     borderRadius: 16,
-    width: "90%",
     maxWidth: 360,
+    margin: "20vh auto",
     textAlign: "center",
-    boxShadow: "0 10px 30px rgba(0,0,0,0.4)",
-    margin: "auto",
-    marginTop: "20vh"
+    boxShadow: "0 10px 30px rgba(0,0,0,0.45)"
   },
 
   input: {
     width: "100%",
-    padding: 12,
+    padding: 14,
     marginBottom: 12,
     borderRadius: 8,
     border: "none"
@@ -207,7 +242,7 @@ const styles = {
   button: {
     width: "100%",
     padding: 14,
-    borderRadius: 10,
+    borderRadius: 12,
     border: "none",
     background: "#00FFD1",
     color: "#04293A",
@@ -216,19 +251,33 @@ const styles = {
     cursor: "pointer"
   },
 
-  bonus: {
-    marginTop: 12,
-    color: "#00FFD1"
+  bonus: { marginTop: 12, color: "#00FFD1" },
+  bonusBig: { color: "#00FFD1", fontSize: 28 },
+  small: { marginTop: 10, fontSize: 12, opacity: 0.8 },
+
+  progressBar: {
+    width: "100%",
+    height: 10,
+    background: "#0B3A5A",
+    borderRadius: 8,
+    overflow: "hidden",
+    marginTop: 16
   },
 
-  bonusBig: {
-    color: "#00FFD1",
-    fontSize: 28
-  },
-
-  small: {
-    marginTop: 12,
-    fontSize: 12,
-    opacity: 0.8
+  progressFill: {
+    height: "100%",
+    background: "linear-gradient(90deg,#00FFD1,#00C2A8)",
+    transition: "width 0.4s ease"
   }
 };
+
+/* ---------------- ANIMACIÓN ---------------- */
+const style = document.createElement("style");
+style.innerHTML = `
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(0,255,209,0.6); }
+  70% { box-shadow: 0 0 0 18px rgba(0,255,209,0); }
+  100% { box-shadow: 0 0 0 0 rgba(0,255,209,0); }
+}
+`;
+document.head.appendChild(style);
