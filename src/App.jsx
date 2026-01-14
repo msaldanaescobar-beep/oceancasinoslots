@@ -6,19 +6,35 @@ export default function App() {
   const [fade, setFade] = useState(true);
   const isMobile = window.innerWidth <= 480;
 
-  const changeView = (newView) => {
+  const changeView = (next) => {
     setFade(false);
     setTimeout(() => {
-      setView(newView);
+      setView(next);
       setFade(true);
     }, 250);
   };
 
   return (
     <div style={styles.app}>
-      {/* Glow central del 777 */}
+      {/* VIDEO DE FONDO */}
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        preload="auto"
+        style={styles.videoBg}
+      >
+        <source
+          src="/VID-20260114-WA0018.mp4"
+          type="video/mp4"
+        />
+      </video>
+
+      {/* GLOW CENTRAL 777 */}
       <div style={styles.glow777} />
 
+      {/* OVERLAY */}
       <div style={styles.overlay}>
         <div
           style={{
@@ -43,30 +59,21 @@ function Home({ setView, isMobile }) {
   return (
     <>
       <button
-        style={{
-          ...styles.hotspot,
-          top: isMobile ? "48%" : "52%"
-        }}
+        style={{ ...styles.hotspot, top: isMobile ? "48%" : "52%" }}
         onClick={() => setView("casino")}
       >
         ENTRAR AL CASINO
       </button>
 
       <button
-        style={{
-          ...styles.hotspot,
-          top: isMobile ? "62%" : "64%"
-        }}
+        style={{ ...styles.hotspot, top: isMobile ? "62%" : "64%" }}
         onClick={() => setView("register")}
       >
         REGÍSTRATE
       </button>
 
       <button
-        style={{
-          ...styles.hotspot,
-          top: "74%"
-        }}
+        style={{ ...styles.hotspot, top: "74%" }}
         onClick={() => setView("bonus")}
       >
         🎁 BONO $10.000
@@ -105,23 +112,23 @@ function Bonus({ setView }) {
   );
 }
 
-/* ---------------- INSTALANDO (PROGRESO REAL) ---------------- */
+/* ---------------- INSTALANDO ---------------- */
 function Installing({ setView }) {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    const interval = setInterval(() => {
+    const i = setInterval(() => {
       setProgress((p) => {
         if (p >= 100) {
-          clearInterval(interval);
-          setTimeout(() => setView("casino"), 900);
+          clearInterval(i);
+          setTimeout(() => setView("casino"), 800);
           return 100;
         }
         return p + Math.floor(Math.random() * 8) + 4;
       });
     }, 600);
 
-    return () => clearInterval(interval);
+    return () => clearInterval(i);
   }, [setView]);
 
   return (
@@ -180,13 +187,20 @@ function Casino() {
 const styles = {
   app: {
     minHeight: "100vh",
-    backgroundImage: "url('/bg-casino.png')",
-    backgroundSize: "110%",
-    backgroundPosition: "center",
-    backgroundRepeat: "no-repeat",
     position: "relative",
-    animation: "bgMove 18s ease-in-out infinite alternate",
-    overflow: "hidden"
+    overflow: "hidden",
+    backgroundColor: "#000"
+  },
+
+  videoBg: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+    objectFit: "cover",
+    zIndex: 0,
+    filter: "brightness(0.85)"
   },
 
   overlay: {
@@ -196,25 +210,22 @@ const styles = {
     zIndex: 2
   },
 
-  /* Glow central 777 */
   glow777: {
     position: "absolute",
     top: "45%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    width: "320px",
-    height: "320px",
+    width: 320,
+    height: 320,
     background:
-      "radial-gradient(circle, rgba(0,255,209,0.45) 0%, rgba(0,255,209,0.15) 35%, rgba(0,255,209,0.05) 55%, transparent 70%)",
-    filter: "blur(20px)",
+      "radial-gradient(circle, rgba(0,255,209,0.45) 0%, rgba(0,255,209,0.18) 35%, rgba(0,255,209,0.05) 55%, transparent 70%)",
+    filter: "blur(24px)",
     animation: "glowPulse 6s ease-in-out infinite",
     zIndex: 1,
     pointerEvents: "none"
   },
 
   fadeContainer: {
-    width: "100%",
-    height: "100%",
     position: "relative",
     zIndex: 3
   },
@@ -292,12 +303,6 @@ style.innerHTML = `
   0% { box-shadow: 0 0 0 0 rgba(0,255,209,0.6); }
   70% { box-shadow: 0 0 0 18px rgba(0,255,209,0); }
   100% { box-shadow: 0 0 0 0 rgba(0,255,209,0); }
-}
-
-@keyframes bgMove {
-  0% { background-position: center top; background-size: 110%; }
-  50% { background-position: center center; background-size: 115%; }
-  100% { background-position: center bottom; background-size: 110%; }
 }
 
 @keyframes glowPulse {
