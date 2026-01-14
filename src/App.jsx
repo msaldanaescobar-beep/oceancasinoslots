@@ -16,6 +16,9 @@ export default function App() {
 
   return (
     <div style={styles.app}>
+      {/* Glow central del 777 */}
+      <div style={styles.glow777} />
+
       <div style={styles.overlay}>
         <div
           style={{
@@ -25,8 +28,8 @@ export default function App() {
           }}
         >
           {view === "home" && <Home setView={changeView} isMobile={isMobile} />}
-          {view === "register" && <Register setView={changeView} isMobile={isMobile} />}
-          {view === "bonus" && <Bonus setView={changeView} isMobile={isMobile} />}
+          {view === "register" && <Register setView={changeView} />}
+          {view === "bonus" && <Bonus setView={changeView} />}
           {view === "installing" && <Installing setView={changeView} />}
           {view === "casino" && <Casino />}
         </div>
@@ -40,21 +43,30 @@ function Home({ setView, isMobile }) {
   return (
     <>
       <button
-        style={{ ...styles.hotspot, top: isMobile ? "48%" : "52%" }}
+        style={{
+          ...styles.hotspot,
+          top: isMobile ? "48%" : "52%"
+        }}
         onClick={() => setView("casino")}
       >
         ENTRAR AL CASINO
       </button>
 
       <button
-        style={{ ...styles.hotspot, top: isMobile ? "62%" : "64%" }}
+        style={{
+          ...styles.hotspot,
+          top: isMobile ? "62%" : "64%"
+        }}
         onClick={() => setView("register")}
       >
         REGÍSTRATE
       </button>
 
       <button
-        style={{ ...styles.hotspot, top: "74%" }}
+        style={{
+          ...styles.hotspot,
+          top: "74%"
+        }}
         onClick={() => setView("bonus")}
       >
         🎁 BONO $10.000
@@ -80,16 +92,12 @@ function Register({ setView }) {
 
 /* ---------------- BONO ---------------- */
 function Bonus({ setView }) {
-  const handleDownload = () => {
-    setView("installing");
-  };
-
   return (
     <div style={styles.card}>
       <h2>🎉 Cuenta creada</h2>
       <p>Descarga nuestra app y recibe</p>
       <h3 style={styles.bonusBig}>$10.000 CLP</h3>
-      <button style={styles.button} onClick={handleDownload}>
+      <button style={styles.button} onClick={() => setView("installing")}>
         DESCARGAR APP
       </button>
       <p style={styles.small}>Android · Descarga segura</p>
@@ -100,23 +108,16 @@ function Bonus({ setView }) {
 /* ---------------- INSTALANDO (PROGRESO REAL) ---------------- */
 function Installing({ setView }) {
   const [progress, setProgress] = useState(0);
-  const messages = [
-    "Verificando seguridad…",
-    "Descargando archivos…",
-    "Instalando componentes…",
-    "Aplicando bono…",
-    "Finalizando instalación…"
-  ];
 
   useEffect(() => {
     const interval = setInterval(() => {
       setProgress((p) => {
         if (p >= 100) {
           clearInterval(interval);
-          setTimeout(() => setView("casino"), 800);
+          setTimeout(() => setView("casino"), 900);
           return 100;
         }
-        return p + Math.floor(Math.random() * 8) + 3;
+        return p + Math.floor(Math.random() * 8) + 4;
       });
     }, 600);
 
@@ -126,7 +127,7 @@ function Installing({ setView }) {
   return (
     <div style={styles.card}>
       <h2>📲 Instalando app</h2>
-      <p>{messages[Math.min(Math.floor(progress / 20), 4)]}</p>
+      <p>Aplicando bono de bienvenida…</p>
 
       <div style={styles.progressBar}>
         <div style={{ ...styles.progressFill, width: `${progress}%` }} />
@@ -147,17 +148,12 @@ function Casino() {
       <h3 style={styles.bonusBig}>$10.000 CLP GRATIS</h3>
 
       <p style={{ fontSize: 12, opacity: 0.85 }}>
-        👥 128 jugadores jugando ahora
+        👥 128 jugadores conectados ahora
       </p>
 
-      <button style={styles.button} onClick={() => alert("🎰 Slot girando...")}>
-        JUGAR SLOTS
-      </button>
+      <button style={styles.button}>JUGAR SLOTS</button>
 
-      <button
-        style={{ ...styles.button, marginTop: 10 }}
-        onClick={() => alert("🎡 Ruleta girando...")}
-      >
+      <button style={{ ...styles.button, marginTop: 10 }}>
         RULETA
       </button>
 
@@ -173,11 +169,7 @@ function Casino() {
         JUGAR CON DINERO REAL
       </button>
 
-      <p style={{ marginTop: 14, fontSize: 11, opacity: 0.75 }}>
-        💡 Consejo: juega gratis antes de apostar
-      </p>
-
-      <p style={{ marginTop: 10, fontSize: 10, opacity: 0.6 }}>
+      <p style={{ marginTop: 12, fontSize: 11, opacity: 0.75 }}>
         Plataforma de entretenimiento · +18
       </p>
     </div>
@@ -189,20 +181,42 @@ const styles = {
   app: {
     minHeight: "100vh",
     backgroundImage: "url('/bg-casino.png')",
-    backgroundSize: "cover",
+    backgroundSize: "110%",
     backgroundPosition: "center",
-    position: "relative"
+    backgroundRepeat: "no-repeat",
+    position: "relative",
+    animation: "bgMove 18s ease-in-out infinite alternate",
+    overflow: "hidden"
   },
 
   overlay: {
     position: "absolute",
     inset: 0,
-    background: "rgba(0,0,0,0.5)"
+    background: "rgba(0,0,0,0.45)",
+    zIndex: 2
+  },
+
+  /* Glow central 777 */
+  glow777: {
+    position: "absolute",
+    top: "45%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: "320px",
+    height: "320px",
+    background:
+      "radial-gradient(circle, rgba(0,255,209,0.45) 0%, rgba(0,255,209,0.15) 35%, rgba(0,255,209,0.05) 55%, transparent 70%)",
+    filter: "blur(20px)",
+    animation: "glowPulse 6s ease-in-out infinite",
+    zIndex: 1,
+    pointerEvents: "none"
   },
 
   fadeContainer: {
     width: "100%",
-    height: "100%"
+    height: "100%",
+    position: "relative",
+    zIndex: 3
   },
 
   hotspot: {
@@ -271,13 +285,25 @@ const styles = {
   }
 };
 
-/* ---------------- ANIMACIÓN ---------------- */
+/* ---------------- ANIMACIONES ---------------- */
 const style = document.createElement("style");
 style.innerHTML = `
 @keyframes pulse {
   0% { box-shadow: 0 0 0 0 rgba(0,255,209,0.6); }
   70% { box-shadow: 0 0 0 18px rgba(0,255,209,0); }
   100% { box-shadow: 0 0 0 0 rgba(0,255,209,0); }
+}
+
+@keyframes bgMove {
+  0% { background-position: center top; background-size: 110%; }
+  50% { background-position: center center; background-size: 115%; }
+  100% { background-position: center bottom; background-size: 110%; }
+}
+
+@keyframes glowPulse {
+  0% { opacity: 0.6; transform: translate(-50%, -50%) scale(0.95); }
+  50% { opacity: 1; transform: translate(-50%, -50%) scale(1.05); }
+  100% { opacity: 0.6; transform: translate(-50%, -50%) scale(0.95); }
 }
 `;
 document.head.appendChild(style);
