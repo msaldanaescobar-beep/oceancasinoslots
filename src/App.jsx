@@ -6,41 +6,34 @@ export default function App() {
   const [muted, setMuted] = useState(true);
   const audioRef = useRef(null);
 
-  const playSound = () => {
-    if (audioRef.current && muted) {
+  useEffect(() => {
+    if (!audioRef.current) return;
+
+    if (muted) {
+      audioRef.current.pause();
+    } else {
+      audioRef.current.volume = 0.18; // volumen premium casino
       audioRef.current.play().catch(() => {});
-      setMuted(false);
     }
-  };
+  }, [muted]);
 
   return (
-    <div style={styles.app} onClick={playSound}>
+    <div style={styles.app}>
       {/* VIDEO FONDO */}
       <video autoPlay loop muted playsInline style={styles.videoBg}>
         <source src="/VID-20260114-WA0018.mp4" type="video/mp4" />
       </video>
 
-      {/* AUDIO */}
-      <audio ref={audioRef} loop>
-        <source src="/ambient.mp3" type="audio/mpeg" />
-      </audio>
+      {/* AUDIO AMBIENTE */}
+      <audio ref={audioRef} src="/deep.mp3" loop preload="auto" />
 
       {/* BOTÓN AUDIO */}
-      <button
-        style={styles.audioToggle}
-        onClick={(e) => {
-          e.stopPropagation();
-          if (!audioRef.current) return;
-          if (muted) {
-            audioRef.current.play();
-          } else {
-            audioRef.current.pause();
-          }
-          setMuted(!muted);
-        }}
-      >
+      <button style={styles.audioBtn} onClick={() => setMuted(!muted)}>
         {muted ? "🔇" : "🔊"}
       </button>
+
+      {/* GLOW CENTRAL */}
+      <div style={styles.glow777} />
 
       {/* OVERLAY */}
       <div style={styles.overlay}>
@@ -56,20 +49,20 @@ export default function App() {
 
 /* ---------------- HOME ---------------- */
 function Home({ setView }) {
-  const [players, setPlayers] = useState(142);
+  const [players, setPlayers] = useState(138);
 
   useEffect(() => {
-    const i = setInterval(() => {
-      setPlayers(p => p + (Math.random() > 0.5 ? 1 : -1));
-    }, 2500);
-    return () => clearInterval(i);
+    const interval = setInterval(() => {
+      setPlayers(p => p + Math.floor(Math.random() * 3));
+    }, 3200);
+    return () => clearInterval(interval);
   }, []);
 
-  const vibrate = () => navigator.vibrate?.(20);
+  const vibrate = () => navigator.vibrate && navigator.vibrate(35);
 
   return (
     <div style={styles.centerGroup}>
-      <p style={styles.tagline}>
+      <p style={styles.heroText}>
         🎰 Juega gratis · Bono sin depósito · Acceso inmediato
       </p>
 
@@ -78,7 +71,7 @@ function Home({ setView }) {
       </p>
 
       <button
-        style={styles.hotspotPrimary}
+        style={styles.hotspot}
         onClick={() => { vibrate(); setView("casino"); }}
       >
         ENTRAR AL CASINO
@@ -98,7 +91,7 @@ function Home({ setView }) {
         🎁 BONO $10.000
       </button>
 
-      <p style={styles.legalMini}>
+      <p style={styles.footerText}>
         +18 · Juego responsable · Plataforma de entretenimiento
       </p>
     </div>
@@ -109,7 +102,7 @@ function Home({ setView }) {
 function Register({ setView }) {
   return (
     <div style={styles.floatBox}>
-      <h2>Crear cuenta</h2>
+      <h2 style={styles.title}>Crear cuenta</h2>
       <input style={styles.input} placeholder="Correo electrónico" />
       <input style={styles.input} type="password" placeholder="Contraseña" />
       <button style={styles.button} onClick={() => setView("bonus")}>
@@ -123,8 +116,8 @@ function Register({ setView }) {
 function Bonus({ setView }) {
   return (
     <div style={styles.floatBox}>
-      <h2>🎉 Cuenta creada</h2>
-      <p>Descarga nuestra app y recibe</p>
+      <h2 style={styles.title}>🎉 Cuenta creada</h2>
+      <p style={styles.text}>Recibes automáticamente</p>
       <h3 style={styles.bonusBig}>$10.000 CLP</h3>
       <button style={styles.button} onClick={() => setView("installing")}>
         DESCARGAR APP
@@ -138,26 +131,27 @@ function Installing({ setView }) {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    const i = setInterval(() => {
+    const interval = setInterval(() => {
       setProgress(p => {
         if (p >= 100) {
-          clearInterval(i);
-          setTimeout(() => setView("casino"), 600);
+          clearInterval(interval);
+          setTimeout(() => setView("casino"), 700);
           return 100;
         }
-        return p + 5;
+        return p + Math.floor(Math.random() * 9);
       });
-    }, 200);
-    return () => clearInterval(i);
+    }, 420);
   }, [setView]);
 
   return (
     <div style={styles.floatBox}>
-      <h2>📲 Instalando app</h2>
+      <h2 style={styles.title}>📲 Instalando app</h2>
+
       <div style={styles.progressBar}>
         <div style={{ ...styles.progressFill, width: `${progress}%` }} />
       </div>
-      <p style={{ marginTop: 10 }}>{progress}%</p>
+
+      <p style={styles.text}>{progress}% completado</p>
     </div>
   );
 }
@@ -166,7 +160,7 @@ function Installing({ setView }) {
 function Casino() {
   return (
     <div style={styles.floatBox}>
-      <h2>🎰 Casino</h2>
+      <h2 style={styles.title}>🎰 Casino</h2>
       <p style={styles.bonus}>🎁 Bono activo</p>
       <h3 style={styles.bonusBig}>$10.000 CLP GRATIS</h3>
 
@@ -186,81 +180,121 @@ function Casino() {
 /* ---------------- ESTILOS ---------------- */
 const styles = {
   app: { minHeight: "100vh", position: "relative", overflow: "hidden" },
-  videoBg: { position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" },
-  overlay: { position: "absolute", inset: 0, background: "rgba(0,0,0,0.45)" },
 
-  audioToggle: {
+  videoBg: {
     position: "absolute",
-    top: 12,
-    right: 12,
+    inset: 0,
+    width: "100%",
+    height: "100%",
+    objectFit: "cover"
+  },
+
+  overlay: {
+    position: "absolute",
+    inset: 0,
+    background: "rgba(0,0,0,0.45)"
+  },
+
+  audioBtn: {
+    position: "absolute",
+    top: 16,
+    right: 16,
     zIndex: 5,
     fontSize: 22,
-    background: "rgba(0,0,0,0.5)",
-    color: "#fff",
+    background: "rgba(0,0,0,0.45)",
     border: "none",
     borderRadius: "50%",
-    padding: 10
+    padding: 10,
+    color: "#fff",
+    cursor: "pointer"
+  },
+
+  glow777: {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 300,
+    height: 300,
+    background: "radial-gradient(circle, rgba(0,255,209,0.5), transparent 65%)",
+    filter: "blur(30px)"
   },
 
   centerGroup: {
     position: "absolute",
     top: "50%",
     left: "50%",
-    transform: "translate(-50%,-50%)",
+    transform: "translate(-50%, -50%)",
+    textAlign: "center",
     display: "flex",
     flexDirection: "column",
-    gap: 14,
-    textAlign: "center"
+    gap: 18
   },
 
-  hotspotPrimary: {
-    padding: "16px 28px",
-    borderRadius: 18,
-    background: "#fff",
-    color: "#04293A",
-    fontWeight: "bold",
-    fontSize: 17
-  },
+  heroText: { color: "#fff", fontSize: 20 },
+  players: { color: "#00FFD1", fontSize: 18 },
+  footerText: { color: "#bbb", fontSize: 12 },
 
   hotspot: {
-    padding: "14px 26px",
+    padding: "18px 36px",
     borderRadius: 18,
+    border: "none",
     background: "#fff",
-    fontSize: 15
+    fontWeight: "bold",
+    fontSize: 20,
+    boxShadow: "0 6px 20px rgba(0,0,0,.35)",
+    cursor: "pointer"
   },
-
-  players: { fontSize: 12, opacity: 0.85 },
-  tagline: { fontSize: 13, opacity: 0.9 },
-
-  legalMini: { fontSize: 11, opacity: 0.6, marginTop: 10 },
 
   floatBox: {
-    margin: "22vh auto",
+    margin: "20vh auto",
     maxWidth: 360,
-    padding: 20,
-    borderRadius: 16,
-    background: "rgba(0,0,0,0.35)",
+    textAlign: "center",
     color: "#fff",
-    textAlign: "center"
+    padding: 22,
+    background: "rgba(0,0,0,0.45)",
+    backdropFilter: "blur(8px)",
+    borderRadius: 20
   },
 
-  input: { width: "100%", padding: 14, marginBottom: 12, borderRadius: 10 },
-  button: { width: "100%", padding: 14, borderRadius: 14, background: "#00FFD1", fontWeight: "bold" },
+  title: { fontSize: 24, marginBottom: 12 },
+  text: { fontSize: 16 },
 
-  bonus: { color: "#00FFD1" },
-  bonusBig: { color: "#00FFD1", fontSize: 28 },
+  input: {
+    width: "100%",
+    padding: 14,
+    marginBottom: 12,
+    borderRadius: 12,
+    border: "none",
+    fontSize: 16
+  },
+
+  button: {
+    width: "100%",
+    padding: 16,
+    borderRadius: 16,
+    border: "none",
+    background: "#00FFD1",
+    fontWeight: "bold",
+    fontSize: 18,
+    cursor: "pointer"
+  },
+
+  bonus: { color: "#00FFD1", fontSize: 16 },
+  bonusBig: { color: "#00FFD1", fontSize: 30 },
 
   progressBar: {
     width: "100%",
-    height: 10,
+    height: 14,
     background: "rgba(255,255,255,0.2)",
     borderRadius: 10,
-    overflow: "hidden"
+    overflow: "hidden",
+    marginTop: 16
   },
 
   progressFill: {
     height: "100%",
     background: "#00FFD1",
-    transition: "width .3s"
+    transition: "width .4s ease"
   }
 };
