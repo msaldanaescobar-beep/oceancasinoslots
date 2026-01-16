@@ -1,186 +1,212 @@
 import { useState, useEffect, useRef } from "react";
 
-/* ---------------- APP ---------------- */
+/* =========================
+   CONFIG GLOBAL
+========================= */
+const BUTTON_SOUND = "/click.mp3"; // sonido botón
+const WIN_SOUND = "/win.mp3";       // sonido win
+const AUDIO_AMBIENT = "/deep.mp3";
+
+/* =========================
+   APP
+========================= */
 export default function App() {
-  const [view, setView] = useState("home");
+  const [view, setView] = useState("splash");
   const [muted, setMuted] = useState(true);
-  const audioRef = useRef(null);
+  const [lang, setLang] = useState("es");
+
+  const ambientRef = useRef(null);
+  const clickRef = useRef(null);
+  const winRef = useRef(null);
 
   useEffect(() => {
-    if (!audioRef.current) return;
+    setTimeout(() => setView("home"), 2200);
+  }, []);
 
-    if (muted) {
-      audioRef.current.pause();
-    } else {
-      audioRef.current.volume = 0.18; // volumen premium casino
-      audioRef.current.play().catch(() => {});
+  useEffect(() => {
+    if (!ambientRef.current) return;
+    if (muted) ambientRef.current.pause();
+    else {
+      ambientRef.current.volume = 0.18;
+      ambientRef.current.play().catch(() => {});
     }
   }, [muted]);
 
+  const playClick = () => {
+    if (!muted && clickRef.current) {
+      clickRef.current.currentTime = 0;
+      clickRef.current.play();
+    }
+    navigator.vibrate && navigator.vibrate(30);
+  };
+
   return (
-    <div style={styles.app}>
+    <div remind-app-installation style={styles.app}>
       {/* VIDEO FONDO */}
       <video autoPlay loop muted playsInline style={styles.videoBg}>
         <source src="/VID-20260114-WA0018.mp4" type="video/mp4" />
       </video>
 
-      {/* AUDIO AMBIENTE */}
-      <audio ref={audioRef} src="/deep.mp3" loop preload="auto" />
+      {/* AUDIOS */}
+      <audio ref={ambientRef} src={AUDIO_AMBIENT} loop />
+      <audio ref={clickRef} src={BUTTON_SOUND} />
+      <audio ref={winRef} src={WIN_SOUND} />
 
-      {/* BOTÓN AUDIO */}
+      {/* BOTONES TOP */}
       <button style={styles.audioBtn} onClick={() => setMuted(!muted)}>
         {muted ? "🔇" : "🔊"}
       </button>
 
-      {/* GLOW CENTRAL */}
-      <div style={styles.glow777} />
+      <select
+        style={styles.langSelect}
+        value={lang}
+        onChange={e => setLang(e.target.value)}
+      >
+        <option value="es">ES</option>
+        <option value="en">EN</option>
+        <option value="pt">PT</option>
+      </select>
 
       {/* OVERLAY */}
       <div style={styles.overlay}>
-        {view === "home" && <Home setView={setView} />}
-        {view === "register" && <Register setView={setView} />}
-        {view === "bonus" && <Bonus setView={setView} />}
-        {view === "installing" && <Installing setView={setView} />}
-        {view === "casino" && <Casino />}
+        {view === "splash" && <Splash />}
+        {view === "home" && <Home setView={setView} playClick={playClick} />}
+        {view === "casino" && (
+          <Casino playClick={playClick} playWin={() => winRef.current?.play()} />
+        )}
       </div>
     </div>
   );
 }
 
-/* ---------------- HOME ---------------- */
-function Home({ setView }) {
+/* =========================
+   SPLASH SCREEN
+========================= */
+function Splash() {
+  return (
+    <div style={styles.splash}>
+      <div style={styles.logo777}>777</div>
+      <p style={{ color: "#00FFD1" }}>Cargando casino...</p>
+    </div>
+  );
+}
+
+/* =========================
+   HOME
+========================= */
+function Home({ setView, playClick }) {
   const [players, setPlayers] = useState(138);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setPlayers(p => p + Math.floor(Math.random() * 3));
-    }, 3200);
-    return () => clearInterval(interval);
+    const i = setInterval(
+      () => setPlayers(p => p + Math.floor(Math.random() * 3)),
+      3000
+    );
+    return () => clearInterval(i);
   }, []);
-
-  const vibrate = () => navigator.vibrate && navigator.vibrate(35);
 
   return (
     <div style={styles.centerGroup}>
-      <p style={styles.heroText}>
-        🎰 Juega gratis · Bono sin depósito · Acceso inmediato
-      </p>
-
-      <p style={styles.players}>
-        👥 {players} jugadores conectados ahora
-      </p>
+      <p style={styles.hero}>🎰 Juega gratis · Bono sin depósito</p>
+      <p style={styles.players}>👥 {players} jugadores conectados</p>
 
       <button
         style={styles.hotspot}
-        onClick={() => { vibrate(); setView("casino"); }}
+        onClick={() => {
+          playClick();
+          setView("casino");
+        }}
       >
         ENTRAR AL CASINO
       </button>
 
-      <button
-        style={styles.hotspot}
-        onClick={() => { vibrate(); setView("register"); }}
-      >
+      <button style={styles.hotspot} onClick={playClick}>
         REGÍSTRATE
       </button>
 
-      <button
-        style={styles.hotspot}
-        onClick={() => { vibrate(); setView("bonus"); }}
-      >
+      <button style={styles.hotspot} onClick={playClick}>
         🎁 BONO $10.000
       </button>
 
-      <p style={styles.footerText}>
-        +18 · Juego responsable · Plataforma de entretenimiento
-      </p>
+      <FakeWinsTicker />
     </div>
   );
 }
 
-/* ---------------- REGISTRO ---------------- */
-function Register({ setView }) {
-  return (
-    <div style={styles.floatBox}>
-      <h2 style={styles.title}>Crear cuenta</h2>
-      <input style={styles.input} placeholder="Correo electrónico" />
-      <input style={styles.input} type="password" placeholder="Contraseña" />
-      <button style={styles.button} onClick={() => setView("bonus")}>
-        CREAR CUENTA
-      </button>
-    </div>
-  );
-}
-
-/* ---------------- BONO ---------------- */
-function Bonus({ setView }) {
-  return (
-    <div style={styles.floatBox}>
-      <h2 style={styles.title}>🎉 Cuenta creada</h2>
-      <p style={styles.text}>Recibes automáticamente</p>
-      <h3 style={styles.bonusBig}>$10.000 CLP</h3>
-      <button style={styles.button} onClick={() => setView("installing")}>
-        DESCARGAR APP
-      </button>
-    </div>
-  );
-}
-
-/* ---------------- INSTALANDO ---------------- */
-function Installing({ setView }) {
-  const [progress, setProgress] = useState(0);
+/* =========================
+   CASINO
+========================= */
+function Casino({ playClick, playWin }) {
+  const [jackpot, setJackpot] = useState(1843200);
+  const [coins, setCoins] = useState(false);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setProgress(p => {
-        if (p >= 100) {
-          clearInterval(interval);
-          setTimeout(() => setView("casino"), 700);
-          return 100;
-        }
-        return p + Math.floor(Math.random() * 9);
-      });
-    }, 420);
-  }, [setView]);
+    const i = setInterval(
+      () => setJackpot(j => j + Math.floor(Math.random() * 250)),
+      1200
+    );
+    return () => clearInterval(i);
+  }, []);
+
+  const win = () => {
+    playClick();
+    playWin();
+    setCoins(true);
+    setTimeout(() => setCoins(false), 1600);
+  };
 
   return (
     <div style={styles.floatBox}>
-      <h2 style={styles.title}>📲 Instalando app</h2>
+      <h2>🎰 Casino</h2>
+      <p style={styles.jackpot}>
+        💰 JACKPOT ${jackpot.toLocaleString("es-CL")}
+      </p>
 
-      <div style={styles.progressBar}>
-        <div style={{ ...styles.progressFill, width: `${progress}%` }} />
-      </div>
-
-      <p style={styles.text}>{progress}% completado</p>
-    </div>
-  );
-}
-
-/* ---------------- CASINO ---------------- */
-function Casino() {
-  return (
-    <div style={styles.floatBox}>
-      <h2 style={styles.title}>🎰 Casino</h2>
-      <p style={styles.bonus}>🎁 Bono activo</p>
-      <h3 style={styles.bonusBig}>$10.000 CLP GRATIS</h3>
-
-      <button style={styles.button}>JUGAR SLOTS</button>
-      <button style={{ ...styles.button, marginTop: 10 }}>RULETA</button>
-
-      <button
-        style={{ ...styles.button, marginTop: 10, background: "#FFD700" }}
-        onClick={() => window.open("https://TUCASINOAFILIADO.com", "_blank")}
-      >
-        JUGAR CON DINERO REAL
+      <button style={styles.button} onClick={win}>
+        GIRAR SLOT
       </button>
+
+      {coins && <Coins />}
     </div>
   );
 }
 
-/* ---------------- ESTILOS ---------------- */
+/* =========================
+   COMPONENTES EXTRA
+========================= */
+
+function FakeWinsTicker() {
+  const wins = [
+    "Carlos ganó $85.000",
+    "María ganó $120.000",
+    "Luis ganó $40.000",
+    "Ana ganó $200.000"
+  ];
+  const [i, setI] = useState(0);
+
+  useEffect(() => {
+    const t = setInterval(() => setI(n => (n + 1) % wins.length), 2600);
+    return () => clearInterval(t);
+  }, []);
+
+  return <div style={styles.ticker}>🏆 {wins[i]}</div>;
+}
+
+function Coins() {
+  return (
+    <div style={styles.coins}>
+      {Array.from({ length: 12 }).map((_, i) => (
+        <span key={i} style={styles.coin}>🪙</span>
+      ))}
+    </div>
+  );
+}
+
+/* =========================
+   ESTILOS
+========================= */
 const styles = {
   app: { minHeight: "100vh", position: "relative", overflow: "hidden" },
-
   videoBg: {
     position: "absolute",
     inset: 0,
@@ -188,113 +214,121 @@ const styles = {
     height: "100%",
     objectFit: "cover"
   },
-
   overlay: {
     position: "absolute",
     inset: 0,
-    background: "rgba(0,0,0,0.45)"
+    background: "rgba(0,0,0,.45)"
   },
 
   audioBtn: {
     position: "absolute",
-    top: 16,
-    right: 16,
-    zIndex: 5,
-    fontSize: 22,
-    background: "rgba(0,0,0,0.45)",
+    top: 14,
+    right: 14,
+    zIndex: 10,
+    fontSize: 20,
+    background: "rgba(0,0,0,.5)",
+    color: "#fff",
     border: "none",
     borderRadius: "50%",
-    padding: 10,
-    color: "#fff",
-    cursor: "pointer"
+    padding: 10
   },
 
-  glow777: {
+  langSelect: {
     position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: 300,
-    height: 300,
-    background: "radial-gradient(circle, rgba(0,255,209,0.5), transparent 65%)",
-    filter: "blur(30px)"
+    top: 14,
+    left: 14,
+    zIndex: 10
+  },
+
+  splash: {
+    height: "100%",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center"
+  },
+
+  logo777: {
+    fontSize: 64,
+    fontWeight: "bold",
+    color: "#FFD700",
+    textShadow: "0 0 30px #FFD700"
   },
 
   centerGroup: {
     position: "absolute",
     top: "50%",
     left: "50%",
-    transform: "translate(-50%, -50%)",
+    transform: "translate(-50%,-50%)",
     textAlign: "center",
     display: "flex",
     flexDirection: "column",
-    gap: 18
+    gap: 16
   },
 
-  heroText: { color: "#fff", fontSize: 20 },
-  players: { color: "#00FFD1", fontSize: 18 },
-  footerText: { color: "#bbb", fontSize: 12 },
+  hero: { color: "#fff", fontSize: 20 },
+  players: { color: "#00FFD1" },
 
   hotspot: {
-    padding: "18px 36px",
+    padding: "18px 34px",
     borderRadius: 18,
-    border: "none",
     background: "#fff",
     fontWeight: "bold",
-    fontSize: 20,
-    boxShadow: "0 6px 20px rgba(0,0,0,.35)",
-    cursor: "pointer"
+    fontSize: 18,
+    border: "none"
+  },
+
+  ticker: {
+    marginTop: 18,
+    color: "#FFD700",
+    fontSize: 14
   },
 
   floatBox: {
-    margin: "20vh auto",
+    margin: "22vh auto",
     maxWidth: 360,
-    textAlign: "center",
-    color: "#fff",
+    background: "rgba(0,0,0,.5)",
     padding: 22,
-    background: "rgba(0,0,0,0.45)",
-    backdropFilter: "blur(8px)",
-    borderRadius: 20
-  },
-
-  title: { fontSize: 24, marginBottom: 12 },
-  text: { fontSize: 16 },
-
-  input: {
-    width: "100%",
-    padding: 14,
-    marginBottom: 12,
-    borderRadius: 12,
-    border: "none",
-    fontSize: 16
+    borderRadius: 18,
+    textAlign: "center",
+    color: "#fff"
   },
 
   button: {
     width: "100%",
     padding: 16,
-    borderRadius: 16,
+    marginTop: 14,
+    borderRadius: 14,
+    background: "#00FFD1",
     border: "none",
-    background: "#00FFD1",
-    fontWeight: "bold",
-    fontSize: 18,
-    cursor: "pointer"
+    fontWeight: "bold"
   },
 
-  bonus: { color: "#00FFD1", fontSize: 16 },
-  bonusBig: { color: "#00FFD1", fontSize: 30 },
-
-  progressBar: {
-    width: "100%",
-    height: 14,
-    background: "rgba(255,255,255,0.2)",
-    borderRadius: 10,
-    overflow: "hidden",
-    marginTop: 16
+  jackpot: {
+    color: "#FFD700",
+    fontSize: 18
   },
 
-  progressFill: {
-    height: "100%",
-    background: "#00FFD1",
-    transition: "width .4s ease"
+  coins: {
+    position: "absolute",
+    inset: 0,
+    pointerEvents: "none"
+  },
+
+  coin: {
+    position: "absolute",
+    animation: "coin 1.5s ease-out forwards"
   }
 };
+
+/* =========================
+   ANIMACIONES
+========================= */
+const style = document.createElement("style");
+style.innerHTML = `
+@keyframes coin {
+  from { transform: translateY(0) scale(1); opacity: 1; }
+  to { transform: translateY(-120px) scale(.5); opacity: 0; }
+}
+`;
+document.head.appendChild(style);
