@@ -175,7 +175,7 @@ const styles = {
   position: "absolute",
   top: "50%",
   left: "50%",
-  transform: "translate(-46%, -50%)", // 👈 ajuste visual SOLO HOME
+  transform: "translate(-40%, -40%)", // 👈 ajuste visual SOLO HOME
   display: "flex",
   flexDirection: "column",
   gap: 16,
