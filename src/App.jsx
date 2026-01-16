@@ -30,17 +30,34 @@ export default function App() {
 function Home({ setView }) {
   return (
     <div style={styles.centerGroup}>
-      <button style={styles.hotspot} onClick={() => setView("casino")}>
+      <p style={styles.tagline}>
+        🎰 Juega gratis · Bono sin depósito · Acceso inmediato
+      </p>
+
+      <button
+        style={styles.hotspotPrimary}
+        onClick={() => setView("casino")}
+      >
         ENTRAR AL CASINO
       </button>
 
-      <button style={styles.hotspot} onClick={() => setView("register")}>
+      <button
+        style={styles.hotspot}
+        onClick={() => setView("register")}
+      >
         REGÍSTRATE
       </button>
 
-      <button style={styles.hotspot} onClick={() => setView("bonus")}>
+      <button
+        style={styles.hotspot}
+        onClick={() => setView("bonus")}
+      >
         🎁 BONO $10.000
       </button>
+
+      <p style={styles.legalMini}>
+        +18 · Juego responsable · Plataforma de entretenimiento
+      </p>
     </div>
   );
 }
@@ -156,43 +173,70 @@ const styles = {
     zIndex: 1
   },
 
-  /* HOTSPOTS CENTRADOS (AJUSTADOS) */
-  
+  centerGroup: {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-46%, -50%)",
+    display: "flex",
+    flexDirection: "column",
+    gap: 14,
+    zIndex: 3
+  },
+
+  tagline: {
+    color: "#fff",
+    fontSize: 13,
+    opacity: 0.85,
+    textAlign: "center",
+    marginBottom: 6
+  },
 
   hotspot: {
     padding: "14px 30px",
     borderRadius: 16,
     border: "none",
-    background: "#FFFFFF",           // 🔹 blanco
+    background: "#FFFFFF",
     color: "#04293A",
     fontWeight: "bold",
-    fontSize: 16,
+    fontSize: 15,
     cursor: "pointer",
     boxShadow: "0 8px 22px rgba(0,0,0,0.45)",
     animation: "pulse 2.2s infinite"
   },
-  centerGroup: {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-40%, -40%)", // 👈 ajuste visual SOLO HOME
-  display: "flex",
-  flexDirection: "column",
-  gap: 16,
-  zIndex: 3
-},
 
-  /* CAJAS TRANSPARENTES */
-  centerGroup: {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-46%, -50%)", // 👈 ajuste visual SOLO HOME
-  display: "flex",
-  flexDirection: "column",
-  gap: 16,
-  zIndex: 3
-},
+  hotspotPrimary: {
+    padding: "16px 32px",
+    borderRadius: 18,
+    border: "none",
+    background: "#FFFFFF",
+    color: "#04293A",
+    fontWeight: "bold",
+    fontSize: 16,
+    cursor: "pointer",
+    boxShadow: "0 10px 28px rgba(0,0,0,0.6)",
+    animation: "pulse 2s infinite"
+  },
+
+  legalMini: {
+    marginTop: 10,
+    fontSize: 11,
+    opacity: 0.6,
+    color: "#fff",
+    textAlign: "center"
+  },
+
+  floatBox: {
+    margin: "22vh auto",
+    maxWidth: 340,
+    textAlign: "center",
+    color: "#fff",
+    padding: 18,
+    background: "rgba(0,0,0,0.35)",
+    backdropFilter: "blur(6px)",
+    borderRadius: 16,
+    zIndex: 3
+  },
 
   input: {
     width: "100%",
@@ -218,7 +262,7 @@ const styles = {
   bonusBig: { color: "#00FFD1", fontSize: 26 }
 };
 
-/* ---------------- ANIMACIONES ---------------- */
+/* ---------------- ANIMACIONES + FEEDBACK ---------------- */
 const style = document.createElement("style");
 style.innerHTML = `
 @keyframes pulse {
@@ -229,6 +273,10 @@ style.innerHTML = `
 @keyframes glow {
   0%,100% { opacity: .55; }
   50% { opacity: 1; }
+}
+button:active {
+  transform: scale(0.96);
+  opacity: 0.9;
 }
 `;
 document.head.appendChild(style);
