@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from "react";
 
-/* ================= APP ================= */
 export default function App() {
   const [view, setView] = useState("home");
   const [lang, setLang] = useState("es");
@@ -8,7 +7,6 @@ export default function App() {
   const [showWin, setShowWin] = useState(false);
   const audioRef = useRef(null);
 
-  /* SERVICE WORKER */
   useEffect(() => {
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.register("/service-worker.js");
@@ -26,23 +24,19 @@ export default function App() {
 
   return (
     <div style={styles.app}>
-      {/* FUENTES */}
       <link
         href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800;900&family=Inter:wght@400;600&display=swap"
         rel="stylesheet"
       />
 
-      {/* VIDEO FONDO */}
       <video autoPlay loop muted playsInline style={styles.video}>
         <source src="/VID-20260114-WA0018.mp4" type="video/mp4" />
       </video>
 
-      {/* AUDIO */}
       <audio ref={audioRef} loop muted={muted}>
         <source src="/deep.mp3" type="audio/mpeg" />
       </audio>
 
-      {/* TOP BAR */}
       <div style={styles.topBar}>
         <button style={styles.topBtn} onClick={() => setLang(lang === "es" ? "en" : "es")}>
           🌐 {lang.toUpperCase()}
@@ -52,7 +46,6 @@ export default function App() {
         </button>
       </div>
 
-      {/* BIG WIN */}
       {showWin && (
         <div style={styles.winOverlay} onClick={() => setShowWin(false)}>
           <div style={styles.winContent}>
@@ -78,7 +71,6 @@ export default function App() {
   );
 }
 
-/* ================= HOME ================= */
 function Home({ playFX, setView, triggerWin }) {
   const [players, setPlayers] = useState(142);
   const [jackpot, setJackpot] = useState(1534200);
@@ -104,12 +96,9 @@ function Home({ playFX, setView, triggerWin }) {
       <h1 style={styles.title}>OCEAN CASINO</h1>
       <h2 style={styles.subtitle}>Vegas Style Online Casino</h2>
 
-      {/* JACKPOT */}
       <div style={styles.jackpotBox}>
         <div style={styles.jackpotLabel}>JACKPOT</div>
-        <div style={styles.jackpotAmount}>
-          ${jackpot.toLocaleString("es-CL")}
-        </div>
+        <div style={styles.jackpotAmount}>${jackpot.toLocaleString("es-CL")}</div>
         <div style={styles.jackpotCoins}>🪙 🪙 🪙</div>
       </div>
 
@@ -145,7 +134,6 @@ function Home({ playFX, setView, triggerWin }) {
   );
 }
 
-/* ================= COMPONENTES SIMPLES ================= */
 function Register({ playFX, onBack }) {
   return (
     <div style={styles.panel}>
@@ -168,13 +156,11 @@ function Panel({ title, onBack }) {
   );
 }
 
-/* ================= MONEDAS ================= */
 function CoinRain({ active }) {
   if (!active) return null;
   return <div style={styles.coinLayer}>🪙🪙🪙🪙🪙</div>;
 }
 
-/* ================= ESTILOS ================= */
 const styles = {
   app: { minHeight: "100vh", position: "relative", overflow: "hidden" },
   video: { position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" },
@@ -192,11 +178,7 @@ const styles = {
     textShadow: "0 0 20px rgba(255,215,0,0.9)"
   },
 
-  subtitle: {
-    fontFamily: "Cinzel",
-    fontSize: 22,
-    marginBottom: 16
-  },
+  subtitle: { fontFamily: "Cinzel", fontSize: 22, marginBottom: 16 },
 
   jackpotBox: {
     border: "3px solid red",
@@ -207,13 +189,7 @@ const styles = {
     background: "rgba(0,0,0,0.65)"
   },
 
-  jackpotLabel: {
-    fontFamily: "Cinzel",
-    fontSize: 18,
-    color: "#fff",
-    letterSpacing: 2
-  },
-
+  jackpotLabel: { fontFamily: "Cinzel", fontSize: 18, letterSpacing: 2 },
   jackpotAmount: {
     fontFamily: "Cinzel",
     fontSize: 42,
@@ -221,12 +197,17 @@ const styles = {
     color: "#FFD700",
     textShadow: "0 0 18px gold"
   },
-
   jackpotCoins: { marginTop: 6, fontSize: 22 },
 
-  players: { marginTop: 12, fontSize: 16 },
+  players: { marginTop: 12 },
 
-  buttons: { marginTop: 28, display: "flex", flexDirection: "column", gap: 16 },
+  buttons: {
+    marginTop: 28,
+    display: "flex",
+    flexDirection: "column",
+    gap: 16,
+    alignItems: "center"
+  },
 
   primaryBtn: {
     width: 320,
@@ -249,17 +230,19 @@ const styles = {
     border: "2px solid #FFD700"
   },
 
-  trustBar: { marginTop: 18, fontSize: 13, opacity: 0.9 },
+  trustBar: { marginTop: 18, fontSize: 13 },
 
   winTicker: {
     position: "fixed",
-    bottom: 24,
+    top: 90,
     left: "50%",
     transform: "translateX(-50%)",
     background: "rgba(0,0,0,0.75)",
     padding: "10px 18px",
     borderRadius: 20,
-    fontFamily: "Cinzel"
+    fontFamily: "Cinzel",
+    fontSize: 14,
+    zIndex: 40
   },
 
   panel: {
@@ -272,9 +255,7 @@ const styles = {
   },
 
   panelTitle: { fontFamily: "Cinzel", fontSize: 28 },
-
   input: { width: "100%", padding: 12, marginTop: 10, borderRadius: 12 },
-
   backBtn: { marginTop: 16 },
 
   winOverlay: {
@@ -297,7 +278,6 @@ const styles = {
     inset: 0,
     pointerEvents: "none",
     fontSize: 30,
-    textAlign: "center",
-    animation: "pulse 1.5s infinite"
+    textAlign: "center"
   }
 };
