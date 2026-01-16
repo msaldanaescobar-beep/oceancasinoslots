@@ -240,65 +240,79 @@ const styles = {
   topBtn: { padding: "8px 12px", borderRadius: 10, border: "none", fontWeight: 600 },
 
   home: { textAlign: "center", paddingTop: "14vh", fontFamily: "Inter" },
-  title: { fontFamily: "Cinzel", fontSize: 40 },
-  subtitle: { fontFamily: "Cinzel", fontSize: 20, opacity: 0.9 },
+  title: {
+  fontFamily: "Cinzel",
+  fontSize: 48,
+  fontWeight: 800,
+  letterSpacing: 2,
+  color: "#FFD700",
+  textShadow: `
+    0 0 8px #FFD700,
+    0 0 16px rgba(255,215,0,0.8),
+    0 0 32px rgba(255,0,0,0.6)
+  `
+},
 
-  jackpotBox: {
-    position: "relative",
-    marginTop: 18,
-    padding: "18px 28px 36px",
-    border: "3px solid red",
-    borderRadius: 22,
-    background: "rgba(0,0,0,0.55)",
-    boxShadow: "0 0 25px rgba(255,0,0,0.9)",
-    animation: "jackpotGlow 2s infinite"
-  },
+subtitle: {
+  fontFamily: "Cinzel",
+  fontSize: 22,
+  marginTop: 6,
+  color: "#fff",
+  textShadow: "0 0 6px rgba(255,255,255,0.6)"
+},
 
-  jackpotLabel: { fontSize: 16 },
-  jackpotAmount: { fontSize: 34, fontWeight: 800 },
+jackpotLabel: {
+  fontFamily: "Cinzel",
+  fontSize: 18,
+  color: "#fff",
+  letterSpacing: 1.5,
+  textShadow: "0 0 6px red"
+},
 
-  coinsWrapper: {
-    position: "absolute",
-    bottom: -24,
-    left: "50%",
-    transform: "translateX(-50%)",
-    display: "flex",
-    gap: 10
-  },
+jackpotAmount: {
+  fontFamily: "Cinzel",
+  fontSize: 42,
+  fontWeight: 800,
+  background: "linear-gradient(180deg, #FFD700, #FFB700)",
+  WebkitBackgroundClip: "text",
+  WebkitTextFillColor: "transparent",
+  textShadow: `
+    0 0 12px rgba(255,215,0,0.9),
+    0 0 28px rgba(255,0,0,0.6)
+  `,
+  animation: "jackpotGlow 1.8s infinite"
+},
 
-  coin: {
-    fontSize: 22,
-    animation: "coinFloat 2.5s infinite ease-in-out"
-  },
+primaryBtn: {
+  width: 320,
+  padding: 20,
+  borderRadius: 26,
+  fontSize: 20,
+  fontWeight: 800,
+  fontFamily: "Cinzel",
+  background: "linear-gradient(180deg, #FFD700, #FFB700)",
+  color: "#000",
+  border: "2px solid #FF1A1A",
+  boxShadow: `
+    0 0 12px rgba(255,215,0,0.9),
+    0 0 24px rgba(255,0,0,0.6)
+  `,
+  cursor: "pointer"
+},
 
-  players: { marginTop: 10, fontSize: 16 },
+secondaryBtn: {
+  width: 320,
+  padding: 18,
+  borderRadius: 24,
+  fontSize: 17,
+  fontFamily: "Cinzel",
+  background: "rgba(0,0,0,0.8)",
+  color: "#FFD700",
+  border: "2px solid #FFD700",
+  boxShadow: "0 0 10px rgba(255,215,0,0.6)",
+  cursor: "pointer"
+},
 
-  buttons: {
-    marginTop: 28,
-    display: "flex",
-    flexDirection: "column",
-    gap: 16,
-    alignItems: "center"
-  },
-
-  primaryBtn: {
-    width: 300,
-    padding: 18,
-    borderRadius: 22,
-    fontSize: 18,
-    fontWeight: 700,
-    background: "#00FFD1",
-    border: "none"
-  },
-
-  secondaryBtn: {
-    width: 300,
-    padding: 16,
-    borderRadius: 20,
-    fontSize: 16,
-    background: "#fff",
-    border: "none"
-  },
 
   trustBar: {
     marginTop: 18,
