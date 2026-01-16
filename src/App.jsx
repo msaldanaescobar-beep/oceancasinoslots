@@ -163,7 +163,6 @@ function CoinRain({ active }) {
     const i = setInterval(spawn, 300);
     return () => clearInterval(i);
   }, [active]);
-<CoinRain active={showWin || view === "home"} />
 
   return (
     <div style={styles.coinLayer}>
