@@ -1,13 +1,25 @@
 import { useState, useEffect, useRef } from "react";
 
-/* ================= ANIMACIÓN MONEDAS ================= */
+/* ================= ANIMACIONES GLOBALES ================= */
 if (typeof document !== "undefined") {
   const style = document.createElement("style");
   style.innerHTML = `
     @keyframes coinFloat {
-      0% { transform: translateY(0); opacity: 0.7; }
-      50% { transform: translateY(-14px); opacity: 1; }
-      100% { transform: translateY(0); opacity: 0.7; }
+      0% { transform: translateY(0); opacity: 0.6; }
+      50% { transform: translateY(-22px); opacity: 1; }
+      100% { transform: translateY(0); opacity: 0.6; }
+    }
+
+    @keyframes jackpotGlow {
+      0% { box-shadow: 0 0 20px rgba(255,0,0,0.6); }
+      50% { box-shadow: 0 0 40px rgba(255,215,0,1); }
+      100% { box-shadow: 0 0 20px rgba(255,0,0,0.6); }
+    }
+
+    @keyframes headerGlow {
+      0% { text-shadow: 0 0 8px gold; }
+      50% { text-shadow: 0 0 18px red; }
+      100% { text-shadow: 0 0 8px gold; }
     }
   `;
   document.head.appendChild(style);
@@ -30,13 +42,12 @@ export default function App() {
 
   return (
     <div style={styles.app}>
-      {/* FUENTES */}
       <link
         href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800&family=Inter:wght@400;600;700&display=swap"
         rel="stylesheet"
       />
 
-      {/* VIDEO FONDO */}
+      {/* VIDEO */}
       <video autoPlay loop muted playsInline style={styles.video}>
         <source src="/VID-20260114-WA0018.mp4" type="video/mp4" />
       </video>
@@ -46,21 +57,24 @@ export default function App() {
         <source src="/deep.mp3" type="audio/mpeg" />
       </audio>
 
-      {/* TOP BAR */}
-      <div style={styles.topBar}>
-        <button style={styles.topBtn} onClick={() => setLang(lang === "es" ? "en" : "es")}>
-          🌐 {lang.toUpperCase()}
-        </button>
-        <button style={styles.topBtn} onClick={() => setMuted(!muted)}>
-          {muted ? "🔇" : "🔊"}
-        </button>
-      </div>
+      {/* HEADER VEGAS */}
+      <header style={styles.header}>
+        <span style={styles.logo}>OCEAN CASINO</span>
+        <div>
+          <button style={styles.headerBtn} onClick={() => setLang(lang === "es" ? "en" : "es")}>
+            🌐 {lang.toUpperCase()}
+          </button>
+          <button style={styles.headerBtn} onClick={() => setMuted(!muted)}>
+            {muted ? "🔇" : "🔊"}
+          </button>
+        </div>
+      </header>
 
       <div style={styles.overlay}>
         {view === "home" && <Home playFX={playFX} setView={setView} />}
         {view === "casino" && (
           <Panel title="🎰 CASINO" onBack={() => setView("home")}>
-            Slots premium · Casino en vivo · Pagos rápidos
+            Slots premium · Casino en vivo · Pagos instantáneos
           </Panel>
         )}
         {view === "register" && <Register onBack={() => setView("home")} playFX={playFX} />}
@@ -76,37 +90,32 @@ export default function App() {
 
 /* ================= HOME ================= */
 function Home({ playFX, setView }) {
-  const [players, setPlayers] = useState(142);
-  const [jackpot, setJackpot] = useState(1534200);
+  const [players, setPlayers] = useState(148);
+  const [displayJackpot, setDisplayJackpot] = useState(1500000);
+  const [targetJackpot, setTargetJackpot] = useState(1500000);
   const [win, setWin] = useState("");
 
   const games = ["Sweet Bonanza", "Gates of Olympus", "777 Deluxe", "Ocean Slots"];
   const names = ["Juan", "Carlos", "Pedro", "Luis", "Miguel"];
 
   useEffect(() => {
-    const p = setInterval(
-      () => setPlayers(v => Math.max(80, v + (Math.random() > 0.5 ? 1 : -1))),
-      4000
-    );
+    setInterval(() => setPlayers(v => Math.max(90, v + (Math.random() > 0.5 ? 1 : -1))), 4000);
+    setInterval(() => setTargetJackpot(v => v + Math.floor(Math.random() * 400)), 2000);
 
-    const j = setInterval(
-      () => setJackpot(v => v + Math.floor(Math.random() * 300)),
-      2000
-    );
-
-    const w = setInterval(() => {
+    setInterval(() => {
       const msg = `${names[Math.floor(Math.random() * names.length)]} ganó $${(
-        Math.random() * 90000 + 10000
+        Math.random() * 80000 + 12000
       ).toFixed(0)} en ${games[Math.floor(Math.random() * games.length)]}`;
       setWin(msg);
     }, 4500);
-
-    return () => {
-      clearInterval(p);
-      clearInterval(j);
-      clearInterval(w);
-    };
   }, []);
+
+  useEffect(() => {
+    const smooth = setInterval(() => {
+      setDisplayJackpot(v => (v < targetJackpot ? v + 25 : v));
+    }, 30);
+    return () => clearInterval(smooth);
+  }, [targetJackpot]);
 
   return (
     <div style={styles.home}>
@@ -117,7 +126,7 @@ function Home({ playFX, setView }) {
       <div style={styles.jackpotBox}>
         <div style={styles.jackpotLabel}>💰 JACKPOT</div>
         <div style={styles.jackpotAmount}>
-          ${jackpot.toLocaleString("es-CL")}
+          ${displayJackpot.toLocaleString("es-CL")}
         </div>
 
         <div style={styles.coinsWrapper}>
@@ -146,18 +155,19 @@ function Home({ playFX, setView }) {
   );
 }
 
-/* ================= REGISTRO ================= */
+/* ================= REGISTRO PREMIUM ================= */
 function Register({ onBack, playFX }) {
   return (
     <div style={styles.panel}>
       <h2 style={styles.panelTitle}>Crear cuenta</h2>
+      <p style={styles.panelText}>Acceso inmediato · Pagos rápidos · Soporte 24/7</p>
 
       <input placeholder="Usuario" style={styles.input} />
       <input placeholder="Email" style={styles.input} />
       <input type="password" placeholder="Contraseña" style={styles.input} />
 
       <button style={styles.primaryBtn} onClick={playFX}>
-        Crear cuenta
+        Crear cuenta ahora
       </button>
 
       <button style={styles.backBtn} onClick={onBack}>⬅ Volver</button>
@@ -180,112 +190,88 @@ function Panel({ title, children, onBack }) {
 const styles = {
   app: { minHeight: "100vh", position: "relative", overflow: "hidden" },
   video: { position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" },
-  overlay: { position: "absolute", inset: 0, background: "rgba(0,0,0,0.55)", color: "#fff" },
+  overlay: { position: "absolute", inset: 0, background: "rgba(0,0,0,0.6)", color: "#fff" },
 
-  topBar: { position: "absolute", top: 12, right: 12, display: "flex", gap: 8, zIndex: 10 },
-  topBtn: { padding: "8px 12px", borderRadius: 10, border: "none", fontWeight: 600 },
+  header: {
+    position: "absolute",
+    top: 0,
+    width: "100%",
+    padding: "12px 18px",
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    zIndex: 10,
+    background: "linear-gradient(to bottom, rgba(0,0,0,0.8), transparent)"
+  },
 
-  home: { textAlign: "center", paddingTop: "14vh", fontFamily: "Inter" },
-  title: { fontFamily: "Cinzel", fontSize: 40 },
-  subtitle: { fontFamily: "Cinzel", fontSize: 20 },
+  logo: {
+    fontFamily: "Cinzel",
+    fontSize: 22,
+    color: "gold",
+    animation: "headerGlow 3s infinite"
+  },
+
+  headerBtn: { marginLeft: 8, padding: "8px 12px", borderRadius: 10 },
+
+  home: { textAlign: "center", paddingTop: "18vh", fontFamily: "Inter" },
+  title: { fontFamily: "Cinzel", fontSize: 42 },
+  subtitle: { fontFamily: "Cinzel", fontSize: 22 },
 
   jackpotBox: {
-    position: "relative",
-    marginTop: 18,
-    padding: "18px 26px 30px",
+    marginTop: 20,
+    padding: "22px 30px 40px",
     border: "3px solid red",
-    borderRadius: 20,
-    display: "inline-block",
+    borderRadius: 22,
     fontFamily: "Cinzel",
-    boxShadow: "0 0 25px rgba(255,0,0,0.9)",
-    background: "rgba(0,0,0,0.6)",
+    background: "rgba(0,0,0,0.65)",
+    animation: "jackpotGlow 2.5s infinite"
   },
 
-  jackpotLabel: {
-    fontSize: 18,
-    letterSpacing: 2,
-    color: "#fff",
-    WebkitTextStroke: "1px red",
-  },
-
-  jackpotAmount: {
-    fontSize: 38,
-    fontWeight: 800,
-    marginTop: 6,
-    color: "#fff",
-    textShadow: "0 0 12px red",
-  },
+  jackpotLabel: { fontSize: 18, letterSpacing: 2 },
+  jackpotAmount: { fontSize: 40, fontWeight: 800 },
 
   coinsWrapper: {
-    position: "absolute",
-    bottom: -14,
-    left: "50%",
-    transform: "translateX(-50%)",
+    marginTop: 14,
     display: "flex",
-    gap: 10,
+    justifyContent: "center",
+    gap: 12
   },
 
-  coin: {
-    fontSize: 22,
-    animation: "coinFloat 2.5s infinite ease-in-out",
-  },
+  coin: { fontSize: 24, animation: "coinFloat 2.8s infinite" },
 
-  players: { marginTop: 10, fontSize: 16 },
-
-  buttons: {
-    marginTop: 30,
-    display: "flex",
-    flexDirection: "column",
-    gap: 16,
-    alignItems: "center",
-  },
+  players: { marginTop: 10 },
+  buttons: { marginTop: 28, display: "flex", flexDirection: "column", gap: 14 },
 
   primaryBtn: {
-    width: 300,
     padding: 18,
     borderRadius: 22,
     fontSize: 18,
-    fontWeight: 700,
     background: "linear-gradient(135deg, gold, orange)",
-    border: "none",
+    border: "none"
   },
 
   secondaryBtn: {
-    width: 300,
     padding: 16,
     borderRadius: 20,
-    fontSize: 16,
     background: "#111",
-    color: "#fff",
-    border: "1px solid #444",
+    color: "#fff"
   },
 
   panel: {
-    margin: "18vh auto",
+    margin: "20vh auto",
     width: "90%",
     maxWidth: 420,
-    background: "rgba(0,0,0,0.8)",
-    padding: 24,
-    borderRadius: 20,
+    background: "rgba(0,0,0,0.85)",
+    padding: 26,
+    borderRadius: 22
   },
 
   panelTitle: { fontFamily: "Cinzel", fontSize: 26 },
-  panelText: { marginTop: 12, fontSize: 16 },
+  panelText: { marginTop: 10 },
 
-  input: {
-    width: "100%",
-    padding: 12,
-    marginTop: 10,
-    borderRadius: 12,
-    border: "none",
-  },
+  input: { width: "100%", padding: 14, marginTop: 12, borderRadius: 14 },
 
-  backBtn: {
-    marginTop: 16,
-    padding: 12,
-    borderRadius: 14,
-    border: "none",
-  },
+  backBtn: { marginTop: 18, padding: 12 },
 
   winTicker: {
     position: "fixed",
@@ -294,7 +280,6 @@ const styles = {
     transform: "translateX(-50%)",
     background: "rgba(0,0,0,0.75)",
     padding: "10px 18px",
-    borderRadius: 20,
-    fontSize: 14,
-  },
+    borderRadius: 20
+  }
 };
