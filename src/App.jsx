@@ -334,19 +334,6 @@ const styles = {
     0 0 16px rgba(255,215,0,0.8),
     0 0 32px rgba(255,0,0,0.6)
   `
-    coinLayer: {
-  position: "fixed",
-  inset: 0,
-  pointerEvents: "none",
-  zIndex: 15
-},
-
-coinPhysic: {
-  position: "absolute",
-  fontSize: 26,
-  filter: "drop-shadow(0 0 6px gold)"
-},
-
 },
 
 subtitle: {
@@ -489,4 +476,18 @@ secondaryBtn: {
   winTitle: { fontSize: 42 },
   winAmount: { fontSize: 48, margin: "12px 0" },
   winCoins: { fontSize: 32 }
+
+  coinLayer: {
+  position: "fixed",
+  inset: 0,
+  pointerEvents: "none",
+  zIndex: 15
+},
+
+coinPhysic: {
+  position: "absolute",
+  fontSize: 26,
+  filter: "drop-shadow(0 0 6px gold)"
+},
+
 };
