@@ -14,7 +14,19 @@ export default function App() {
       navigator.serviceWorker.register("/service-worker.js");
     }
   }, []);
-
+  
+/* QUITAR SPLASH SCREEN */
+  useEffect(() => {
+    const splash = document.getElementById("splash");
+    if (splash) {
+      setTimeout(() => {
+        splash.style.opacity = "0";
+        splash.style.transition = "opacity 0.6s ease";
+        setTimeout(() => splash.remove(), 600);
+      }, 800);
+    }
+  }, []);
+  
   const playFX = () => {
     if (audioRef.current) {
       audioRef.current.muted = false;
@@ -92,18 +104,6 @@ export default function App() {
     </div>
   );
 }
-
-  /* QUITAR SPLASH SCREEN */
-  useEffect(() => {
-    const splash = document.getElementById("splash");
-    if (splash) {
-      setTimeout(() => {
-        splash.style.opacity = "0";
-        splash.style.transition = "opacity 0.6s ease";
-        setTimeout(() => splash.remove(), 600);
-      }, 800);
-    }
-  }, []);
 
 /* ================= HOME ================= */
 function Home({ playFX, setView, triggerWin }) {
