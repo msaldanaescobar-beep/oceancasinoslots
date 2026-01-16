@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 
 /* ================= CONFIG ================= */
-const TELEGRAM_USER = "OceanCasinoVIP";
+const TELEGRAM_USER = "Oceancasinoslots";
 const TELEGRAM_MSG = encodeURIComponent(
   "Hola, quiero activar el bono VIP de Ocean Casino 🎰"
 );
@@ -81,6 +81,8 @@ export default function App() {
       <div style={styles.overlay}>
         <Home playFX={playFX} triggerWin={() => setShowWin(true)} />
       </div>
+
+      <TelegramFloating />
     </div>
   );
 }
@@ -92,11 +94,11 @@ function Home({ playFX, triggerWin }) {
   const [seconds, setSeconds] = useState(600);
 
   const users = [
-    ["Matías", "Chile", "🇨🇱"],
-    ["Andrea", "México", "🇲🇽"],
-    ["Luis", "Perú", "🇵🇪"],
-    ["Carlos", "Colombia", "🇨🇴"],
-    ["Sofía", "Argentina", "🇦🇷"]
+    ["Matías", "🇨🇱"],
+    ["Andrea", "🇲🇽"],
+    ["Luis", "🇵🇪"],
+    ["Carlos", "🇨🇴"],
+    ["Sofía", "🇦🇷"]
   ];
 
   useEffect(() => {
@@ -106,9 +108,7 @@ function Home({ playFX, triggerWin }) {
 
     setInterval(() => {
       const u = users[Math.floor(Math.random() * users.length)];
-      setFakeWin(
-        `${u[2]} ${u[0]} retiró $${(Math.random() * 20000 + 15000).toFixed(0)}`
-      );
+      setFakeWin(`${u[1]} ${u[0]} retiró $${(Math.random() * 20000 + 15000).toFixed(0)}`);
     }, 4500);
 
     setInterval(() => {
@@ -148,7 +148,7 @@ function Home({ playFX, triggerWin }) {
           playFX();
           triggerWin();
           window.open(
-            `https://t.me/${ Oceancasinoslots }?text=${TELEGRAM_MSG}`,
+            `https://t.me/${TELEGRAM_USER}?text=${TELEGRAM_MSG}`,
             "_blank"
           );
         }}
@@ -160,6 +160,20 @@ function Home({ playFX, triggerWin }) {
         Cupos limitados · Prioridad Chile
       </small>
     </div>
+  );
+}
+
+/* ================= TELEGRAM FLOATING ================= */
+function TelegramFloating() {
+  return (
+    <a
+      href={`https://t.me/${TELEGRAM_USER}?text=${TELEGRAM_MSG}`}
+      target="_blank"
+      rel="noreferrer"
+      style={styles.telegramBtn}
+    >
+      💬 Telegram VIP
+    </a>
   );
 }
 
@@ -196,10 +210,7 @@ function CoinRain({ active }) {
   return (
     <div style={styles.coinLayer}>
       {coins.map(c => (
-        <div
-          key={c.id}
-          style={{ ...styles.coin, transform: `translate(${c.x}px, ${c.y}px)` }}
-        >
+        <div key={c.id} style={{ ...styles.coin, transform: `translate(${c.x}px, ${c.y}px)` }}>
           🪙
         </div>
       ))}
@@ -235,11 +246,7 @@ const styles = {
 
   trustCopy: { fontSize: 14, marginTop: 10, lineHeight: 1.5 },
 
-  timer: {
-    marginTop: 14,
-    fontWeight: 700,
-    color: "#ff4d4d"
-  },
+  timer: { marginTop: 14, fontWeight: 700, color: "#ff4d4d" },
 
   primaryBtn: {
     marginTop: 24,
@@ -263,6 +270,19 @@ const styles = {
     padding: "8px 16px",
     borderRadius: 20,
     fontSize: 14
+  },
+
+  telegramBtn: {
+    position: "fixed",
+    bottom: 20,
+    right: 20,
+    background: "#229ED9",
+    color: "#fff",
+    padding: "14px 18px",
+    borderRadius: 50,
+    fontWeight: 700,
+    textDecoration: "none",
+    zIndex: 999
   },
 
   coinLayer: { position: "fixed", inset: 0, pointerEvents: "none" },
