@@ -7,6 +7,14 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     <App />
   </React.StrictMode>
 );
+
+import { useEffect } from "react";
+
+useEffect(() => {
+  const splash = document.getElementById("splash");
+  if (splash) splash.remove();
+}, []);
+
 const style = document.createElement("style");
 style.innerHTML = `
 @keyframes pulse {
