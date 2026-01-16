@@ -1,18 +1,46 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 /* ---------------- APP ---------------- */
 export default function App() {
   const [view, setView] = useState("home");
+  const [muted, setMuted] = useState(true);
+  const audioRef = useRef(null);
+
+  const playSound = () => {
+    if (audioRef.current && muted) {
+      audioRef.current.play().catch(() => {});
+      setMuted(false);
+    }
+  };
 
   return (
-    <div style={styles.app}>
+    <div style={styles.app} onClick={playSound}>
       {/* VIDEO FONDO */}
       <video autoPlay loop muted playsInline style={styles.videoBg}>
         <source src="/VID-20260114-WA0018.mp4" type="video/mp4" />
       </video>
 
-      {/* GLOW CENTRAL */}
-      <div style={styles.glow777} />
+      {/* AUDIO */}
+      <audio ref={audioRef} loop>
+        <source src="/ambient.mp3" type="audio/mpeg" />
+      </audio>
+
+      {/* BOTÓN AUDIO */}
+      <button
+        style={styles.audioToggle}
+        onClick={(e) => {
+          e.stopPropagation();
+          if (!audioRef.current) return;
+          if (muted) {
+            audioRef.current.play();
+          } else {
+            audioRef.current.pause();
+          }
+          setMuted(!muted);
+        }}
+      >
+        {muted ? "🔇" : "🔊"}
+      </button>
 
       {/* OVERLAY */}
       <div style={styles.overlay}>
@@ -28,29 +56,44 @@ export default function App() {
 
 /* ---------------- HOME ---------------- */
 function Home({ setView }) {
+  const [players, setPlayers] = useState(142);
+
+  useEffect(() => {
+    const i = setInterval(() => {
+      setPlayers(p => p + (Math.random() > 0.5 ? 1 : -1));
+    }, 2500);
+    return () => clearInterval(i);
+  }, []);
+
+  const vibrate = () => navigator.vibrate?.(20);
+
   return (
     <div style={styles.centerGroup}>
       <p style={styles.tagline}>
         🎰 Juega gratis · Bono sin depósito · Acceso inmediato
       </p>
 
+      <p style={styles.players}>
+        👥 {players} jugadores conectados ahora
+      </p>
+
       <button
         style={styles.hotspotPrimary}
-        onClick={() => setView("casino")}
+        onClick={() => { vibrate(); setView("casino"); }}
       >
         ENTRAR AL CASINO
       </button>
 
       <button
         style={styles.hotspot}
-        onClick={() => setView("register")}
+        onClick={() => { vibrate(); setView("register"); }}
       >
         REGÍSTRATE
       </button>
 
       <button
         style={styles.hotspot}
-        onClick={() => setView("bonus")}
+        onClick={() => { vibrate(); setView("bonus"); }}
       >
         🎁 BONO $10.000
       </button>
@@ -92,15 +135,29 @@ function Bonus({ setView }) {
 
 /* ---------------- INSTALANDO ---------------- */
 function Installing({ setView }) {
+  const [progress, setProgress] = useState(0);
+
   useEffect(() => {
-    setTimeout(() => setView("casino"), 2500);
+    const i = setInterval(() => {
+      setProgress(p => {
+        if (p >= 100) {
+          clearInterval(i);
+          setTimeout(() => setView("casino"), 600);
+          return 100;
+        }
+        return p + 5;
+      });
+    }, 200);
+    return () => clearInterval(i);
   }, [setView]);
 
   return (
     <div style={styles.floatBox}>
       <h2>📲 Instalando app</h2>
-      <p>Preparando tu bono...</p>
-      <div style={{ marginTop: 16 }}>⏳</div>
+      <div style={styles.progressBar}>
+        <div style={{ ...styles.progressFill, width: `${progress}%` }} />
+      </div>
+      <p style={{ marginTop: 10 }}>{progress}%</p>
     </div>
   );
 }
@@ -117,12 +174,7 @@ function Casino() {
       <button style={{ ...styles.button, marginTop: 10 }}>RULETA</button>
 
       <button
-        style={{
-          ...styles.button,
-          marginTop: 10,
-          background: "#FFD700",
-          color: "#04293A"
-        }}
+        style={{ ...styles.button, marginTop: 10, background: "#FFD700" }}
         onClick={() => window.open("https://TUCASINOAFILIADO.com", "_blank")}
       >
         JUGAR CON DINERO REAL
@@ -133,135 +185,82 @@ function Casino() {
 
 /* ---------------- ESTILOS ---------------- */
 const styles = {
-  app: {
-    minHeight: "100vh",
-    position: "relative",
-    overflow: "hidden",
-    background: "#000"
-  },
+  app: { minHeight: "100vh", position: "relative", overflow: "hidden" },
+  videoBg: { position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" },
+  overlay: { position: "absolute", inset: 0, background: "rgba(0,0,0,0.45)" },
 
-  videoBg: {
+  audioToggle: {
     position: "absolute",
-    inset: 0,
-    width: "100%",
-    height: "100%",
-    objectFit: "cover"
+    top: 12,
+    right: 12,
+    zIndex: 5,
+    fontSize: 22,
+    background: "rgba(0,0,0,0.5)",
+    color: "#fff",
+    border: "none",
+    borderRadius: "50%",
+    padding: 10
   },
 
-  overlay: {
-    position: "absolute",
-    inset: 0,
-    background: "rgba(0,0,0,0.4)",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center"
-  },
-
-  glow777: {
+  centerGroup: {
     position: "absolute",
     top: "50%",
     left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: 320,
-    height: 320,
-    background:
-      "radial-gradient(circle, rgba(0,255,209,0.4), transparent 65%)",
-    filter: "blur(30px)",
-    animation: "glow 6s infinite"
-  },
-
-  /* 🔥 CENTRADO REAL */
-  centerGroup: {
-    width: "100%",
-    maxWidth: 320,
+    transform: "translate(-50%,-50%)",
     display: "flex",
     flexDirection: "column",
-    alignItems: "center",
-    gap: 12,
-    padding: "0 16px",
+    gap: 14,
     textAlign: "center"
   },
 
-  tagline: {
-    color: "#fff",
-    fontSize: 13,
-    opacity: 0.85,
-    marginBottom: 6
-  },
-
   hotspotPrimary: {
-    width: "100%",
-    padding: "14px",
+    padding: "16px 28px",
     borderRadius: 18,
-    border: "none",
-    background: "#FFFFFF",
+    background: "#fff",
     color: "#04293A",
     fontWeight: "bold",
-    fontSize: 16,
-    boxShadow: "0 10px 28px rgba(0,0,0,0.6)"
+    fontSize: 17
   },
 
   hotspot: {
-    width: "100%",
-    padding: "12px",
-    borderRadius: 16,
-    border: "none",
-    background: "#FFFFFF",
-    color: "#04293A",
-    fontWeight: "bold",
-    fontSize: 14,
-    boxShadow: "0 6px 18px rgba(0,0,0,0.45)"
-  },
-
-  legalMini: {
-    fontSize: 11,
-    opacity: 0.6,
-    color: "#fff",
-    marginTop: 8
-  },
-
-  floatBox: {
-    maxWidth: 340,
-    padding: 18,
-    background: "rgba(0,0,0,0.35)",
-    backdropFilter: "blur(6px)",
-    borderRadius: 16,
-    textAlign: "center",
-    color: "#fff"
-  },
-
-  input: {
-    width: "100%",
-    padding: 12,
-    marginBottom: 12,
-    borderRadius: 10,
-    border: "none"
-  },
-
-  button: {
-    width: "100%",
-    padding: 13,
-    borderRadius: 14,
-    border: "none",
-    background: "#00FFD1",
-    color: "#04293A",
-    fontWeight: "bold",
+    padding: "14px 26px",
+    borderRadius: 18,
+    background: "#fff",
     fontSize: 15
   },
 
-  bonus: { marginTop: 10, color: "#00FFD1" },
-  bonusBig: { color: "#00FFD1", fontSize: 26 }
-};
+  players: { fontSize: 12, opacity: 0.85 },
+  tagline: { fontSize: 13, opacity: 0.9 },
 
-/* ---------------- ANIMACIONES ---------------- */
-const style = document.createElement("style");
-style.innerHTML = `
-@keyframes glow {
-  0%,100% { opacity: .6; }
-  50% { opacity: 1; }
-}
-button:active {
-  transform: scale(0.97);
-}
-`;
-document.head.appendChild(style);
+  legalMini: { fontSize: 11, opacity: 0.6, marginTop: 10 },
+
+  floatBox: {
+    margin: "22vh auto",
+    maxWidth: 360,
+    padding: 20,
+    borderRadius: 16,
+    background: "rgba(0,0,0,0.35)",
+    color: "#fff",
+    textAlign: "center"
+  },
+
+  input: { width: "100%", padding: 14, marginBottom: 12, borderRadius: 10 },
+  button: { width: "100%", padding: 14, borderRadius: 14, background: "#00FFD1", fontWeight: "bold" },
+
+  bonus: { color: "#00FFD1" },
+  bonusBig: { color: "#00FFD1", fontSize: 28 },
+
+  progressBar: {
+    width: "100%",
+    height: 10,
+    background: "rgba(255,255,255,0.2)",
+    borderRadius: 10,
+    overflow: "hidden"
+  },
+
+  progressFill: {
+    height: "100%",
+    background: "#00FFD1",
+    transition: "width .3s"
+  }
+};
