@@ -202,8 +202,21 @@ function CoinRain({ active }) {
 /* ================= STYLES ================= */
 const styles = {
   app: { minHeight: "100vh", position: "relative", overflow: "hidden" },
-  video: { position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" },
-  overlay: { position: "absolute", inset: 0, background: "rgba(0,0,0,0.6)" },
+  video: {
+  position: "absolute",
+  inset: 0,
+  width: "100%",
+  height: "100%",
+  objectFit: "cover",
+  zIndex: 0
+},
+
+  overlay: {
+  position: "absolute",
+  inset: 0,
+  background: "linear-gradient(to bottom, rgba(0,0,0,0.35), rgba(0,0,0,0.65))",
+  zIndex: 2
+},
 
   topBar: { position: "absolute", top: 12, right: 12, zIndex: 20 },
   topBtn: { padding: 10, borderRadius: 10 },
