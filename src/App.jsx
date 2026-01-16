@@ -105,6 +105,9 @@ export default function App() {
   );
 }
 
+{/* MONEDAS FÍSICAS */}
+<CoinRain active={showWin || view === "home"} />
+
 /* ================= HOME ================= */
 function Home({ playFX, setView, triggerWin }) {
   const [players, setPlayers] = useState(142);
@@ -242,6 +245,74 @@ function Panel({ title, children, onBack }) {
   );
 }
 
+/* ================= MONEDAS FÍSICAS ================= */
+function CoinRain({ active }) {
+  const [coins, setCoins] = useState([]);
+
+  useEffect(() => {
+    if (!active) return;
+
+    const createCoin = () => ({
+      id: Math.random(),
+      x: Math.random() * window.innerWidth,
+      y: -40,
+      vx: (Math.random() - 0.5) * 1.5,
+      vy: Math.random() * 1 + 2,
+      rotate: Math.random() * 360,
+      vr: (Math.random() - 0.5) * 8
+    });
+
+    let localCoins = Array.from({ length: 18 }, createCoin);
+    setCoins(localCoins);
+
+    let raf;
+    const gravity = 0.15;
+
+    const animate = () => {
+      localCoins = localCoins.map(c => {
+        let ny = c.y + c.vy;
+        let nv = c.vy + gravity;
+
+        if (ny > window.innerHeight + 40) {
+          return createCoin();
+        }
+
+        return {
+          ...c,
+          x: c.x + c.vx,
+          y: ny,
+          vy: nv,
+          rotate: c.rotate + c.vr
+        };
+      });
+
+      setCoins([...localCoins]);
+      raf = requestAnimationFrame(animate);
+    };
+
+    animate();
+    return () => cancelAnimationFrame(raf);
+  }, [active]);
+
+  if (!active) return null;
+
+  return (
+    <div style={styles.coinLayer}>
+      {coins.map(c => (
+        <div
+          key={c.id}
+          style={{
+            ...styles.coinPhysic,
+            transform: `translate(${c.x}px, ${c.y}px) rotate(${c.rotate}deg)`
+          }}
+        >
+          🪙
+        </div>
+      ))}
+    </div>
+  );
+}
+
 /* ================= ESTILOS ================= */
 const styles = {
   app: { minHeight: "100vh", position: "relative", overflow: "hidden" },
@@ -263,6 +334,19 @@ const styles = {
     0 0 16px rgba(255,215,0,0.8),
     0 0 32px rgba(255,0,0,0.6)
   `
+    coinLayer: {
+  position: "fixed",
+  inset: 0,
+  pointerEvents: "none",
+  zIndex: 15
+},
+
+coinPhysic: {
+  position: "absolute",
+  fontSize: 26,
+  filter: "drop-shadow(0 0 6px gold)"
+},
+
 },
 
 subtitle: {
