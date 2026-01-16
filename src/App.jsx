@@ -93,6 +93,18 @@ export default function App() {
   );
 }
 
+  /* QUITAR SPLASH SCREEN */
+  useEffect(() => {
+    const splash = document.getElementById("splash");
+    if (splash) {
+      setTimeout(() => {
+        splash.style.opacity = "0";
+        splash.style.transition = "opacity 0.6s ease";
+        setTimeout(() => splash.remove(), 600);
+      }, 800);
+    }
+  }, []);
+
 /* ================= HOME ================= */
 function Home({ playFX, setView, triggerWin }) {
   const [players, setPlayers] = useState(142);
