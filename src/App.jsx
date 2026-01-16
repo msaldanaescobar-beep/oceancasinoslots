@@ -1,5 +1,18 @@
 import { useState, useEffect, useRef } from "react";
 
+/* ================= ANIMACIÓN MONEDAS ================= */
+if (typeof document !== "undefined") {
+  const style = document.createElement("style");
+  style.innerHTML = `
+    @keyframes coinFloat {
+      0% { transform: translateY(0); opacity: 0.7; }
+      50% { transform: translateY(-14px); opacity: 1; }
+      100% { transform: translateY(0); opacity: 0.7; }
+    }
+  `;
+  document.head.appendChild(style);
+}
+
 export default function App() {
   const [view, setView] = useState("home");
   const [lang, setLang] = useState("es");
@@ -12,7 +25,7 @@ export default function App() {
       audioRef.current.play().catch(() => {});
       setMuted(false);
     }
-    if (navigator.vibrate) navigator.vibrate(50);
+    if (navigator.vibrate) navigator.vibrate(40);
   };
 
   return (
@@ -44,17 +57,13 @@ export default function App() {
       </div>
 
       <div style={styles.overlay}>
-        {view === "home" && (
-          <Home playFX={playFX} setView={setView} />
-        )}
+        {view === "home" && <Home playFX={playFX} setView={setView} />}
         {view === "casino" && (
           <Panel title="🎰 CASINO" onBack={() => setView("home")}>
             Slots premium · Casino en vivo · Pagos rápidos
           </Panel>
         )}
-        {view === "register" && (
-          <Register onBack={() => setView("home")} playFX={playFX} />
-        )}
+        {view === "register" && <Register onBack={() => setView("home")} playFX={playFX} />}
         {view === "bonus" && (
           <Panel title="🎁 BONO $10.000" onBack={() => setView("home")}>
             Bono exclusivo para nuevos jugadores.
@@ -75,8 +84,15 @@ function Home({ playFX, setView }) {
   const names = ["Juan", "Carlos", "Pedro", "Luis", "Miguel"];
 
   useEffect(() => {
-    const p = setInterval(() => setPlayers(v => v + (Math.random() > 0.5 ? 1 : -1)), 4000);
-    const j = setInterval(() => setJackpot(v => v + Math.floor(Math.random() * 300)), 2000);
+    const p = setInterval(
+      () => setPlayers(v => Math.max(80, v + (Math.random() > 0.5 ? 1 : -1))),
+      4000
+    );
+
+    const j = setInterval(
+      () => setJackpot(v => v + Math.floor(Math.random() * 300)),
+      2000
+    );
 
     const w = setInterval(() => {
       const msg = `${names[Math.floor(Math.random() * names.length)]} ganó $${(
@@ -85,7 +101,11 @@ function Home({ playFX, setView }) {
       setWin(msg);
     }, 4500);
 
-    return () => { clearInterval(p); clearInterval(j); clearInterval(w); };
+    return () => {
+      clearInterval(p);
+      clearInterval(j);
+      clearInterval(w);
+    };
   }, []);
 
   return (
@@ -94,20 +114,18 @@ function Home({ playFX, setView }) {
       <h2 style={styles.subtitle}>It’s time to play</h2>
 
       {/* JACKPOT */}
-<div style={styles.jackpotBox}>
-  <div style={styles.jackpotLabel}>💰 JACKPOT</div>
+      <div style={styles.jackpotBox}>
+        <div style={styles.jackpotLabel}>💰 JACKPOT</div>
+        <div style={styles.jackpotAmount}>
+          ${jackpot.toLocaleString("es-CL")}
+        </div>
 
-  <div style={styles.jackpotAmount}>
-    ${jackpot.toLocaleString("es-CL")}
-  </div>
-
-  {/* MONEDAS */}
-  <div style={styles.coinsWrapper}>
-    <span style={styles.coin}>🪙</span>
-    <span style={styles.coin}>🪙</span>
-    <span style={styles.coin}>🪙</span>
-  </div>
-</div>
+        <div style={styles.coinsWrapper}>
+          <span style={styles.coin}>🪙</span>
+          <span style={styles.coin}>🪙</span>
+          <span style={styles.coin}>🪙</span>
+        </div>
+      </div>
 
       <div style={styles.players}>👥 {players} jugadores conectados</div>
 
@@ -123,7 +141,6 @@ function Home({ playFX, setView }) {
         </button>
       </div>
 
-      {/* LIVE WINS */}
       {win && <div style={styles.winTicker}>🏆 {win}</div>}
     </div>
   );
@@ -173,68 +190,102 @@ const styles = {
   subtitle: { fontFamily: "Cinzel", fontSize: 20 },
 
   jackpotBox: {
-  position: "relative",
-  marginTop: 18,
-  padding: "18px 24px 28px",
-  border: "3px solid red",
-  borderRadius: 20,
-  display: "inline-block",
-  fontFamily: "Cinzel",
-  boxShadow: "0 0 22px rgba(255,0,0,0.8)",
-  background: "rgba(0,0,0,0.55)",
-},
+    position: "relative",
+    marginTop: 18,
+    padding: "18px 26px 30px",
+    border: "3px solid red",
+    borderRadius: 20,
+    display: "inline-block",
+    fontFamily: "Cinzel",
+    boxShadow: "0 0 25px rgba(255,0,0,0.9)",
+    background: "rgba(0,0,0,0.6)",
+  },
 
-jackpotLabel: {
-  fontSize: 18,
-  letterSpacing: 2,
-  color: "#fff",
-  WebkitTextStroke: "1px red",
-},
+  jackpotLabel: {
+    fontSize: 18,
+    letterSpacing: 2,
+    color: "#fff",
+    WebkitTextStroke: "1px red",
+  },
 
-jackpotAmount: {
-  fontSize: 38,
-  fontWeight: 800,
-  marginTop: 6,
-  color: "#fff",
-  textShadow: "0 0 12px red",
-},
+  jackpotAmount: {
+    fontSize: 38,
+    fontWeight: 800,
+    marginTop: 6,
+    color: "#fff",
+    textShadow: "0 0 12px red",
+  },
 
-coinsWrapper: {
-  position: "absolute",
-  bottom: -14,
-  left: "50%",
-  transform: "translateX(-50%)",
-  display: "flex",
-  gap: 8,
-},
+  coinsWrapper: {
+    position: "absolute",
+    bottom: -14,
+    left: "50%",
+    transform: "translateX(-50%)",
+    display: "flex",
+    gap: 10,
+  },
 
-  const styleSheet = document.styleSheets[0];
-styleSheet.insertRule(`
-@keyframes coinFloat {
-  0% { transform: translateY(0); opacity: 0.8; }
-  50% { transform: translateY(-12px); opacity: 1; }
-  100% { transform: translateY(0); opacity: 0.8; }
-}
-`, styleSheet.cssRules.length);
-
-coin: {
-  fontSize: 22,
-  animation: "coinFloat 2.5s infinite ease-in-out",
-},
+  coin: {
+    fontSize: 22,
+    animation: "coinFloat 2.5s infinite ease-in-out",
+  },
 
   players: { marginTop: 10, fontSize: 16 },
 
-  buttons: { marginTop: 30, display: "flex", flexDirection: "column", gap: 16, alignItems: "center" },
+  buttons: {
+    marginTop: 30,
+    display: "flex",
+    flexDirection: "column",
+    gap: 16,
+    alignItems: "center",
+  },
 
-  primaryBtn: { width: 300, padding: 18, borderRadius: 22, fontSize: 18, fontWeight: 700 },
-  secondaryBtn: { width: 300, padding: 16, borderRadius: 20, fontSize: 16 },
+  primaryBtn: {
+    width: 300,
+    padding: 18,
+    borderRadius: 22,
+    fontSize: 18,
+    fontWeight: 700,
+    background: "linear-gradient(135deg, gold, orange)",
+    border: "none",
+  },
 
-  panel: { margin: "18vh auto", width: "90%", maxWidth: 420, background: "rgba(0,0,0,0.75)", padding: 24, borderRadius: 20 },
+  secondaryBtn: {
+    width: 300,
+    padding: 16,
+    borderRadius: 20,
+    fontSize: 16,
+    background: "#111",
+    color: "#fff",
+    border: "1px solid #444",
+  },
+
+  panel: {
+    margin: "18vh auto",
+    width: "90%",
+    maxWidth: 420,
+    background: "rgba(0,0,0,0.8)",
+    padding: 24,
+    borderRadius: 20,
+  },
+
   panelTitle: { fontFamily: "Cinzel", fontSize: 26 },
   panelText: { marginTop: 12, fontSize: 16 },
 
-  input: { width: "100%", padding: 12, marginTop: 10, borderRadius: 12, border: "none" },
-  backBtn: { marginTop: 16, padding: 12, borderRadius: 14, border: "none" },
+  input: {
+    width: "100%",
+    padding: 12,
+    marginTop: 10,
+    borderRadius: 12,
+    border: "none",
+  },
+
+  backBtn: {
+    marginTop: 16,
+    padding: 12,
+    borderRadius: 14,
+    border: "none",
+  },
 
   winTicker: {
     position: "fixed",
@@ -244,6 +295,6 @@ coin: {
     background: "rgba(0,0,0,0.75)",
     padding: "10px 18px",
     borderRadius: 20,
-    fontSize: 14
-  }
+    fontSize: 14,
+  },
 };
