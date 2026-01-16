@@ -1,15 +1,33 @@
 import { useState, useEffect, useRef } from "react";
 
+/* ================= CONFIG ================= */
+const TELEGRAM_USER = "OceanCasinoVIP";
+const TELEGRAM_MSG = encodeURIComponent(
+  "Hola, quiero activar el bono VIP de Ocean Casino 🎰"
+);
+
+/* ================= APP ================= */
 export default function App() {
-  const [view, setView] = useState("home");
-  const [lang, setLang] = useState("es");
   const [muted, setMuted] = useState(true);
   const [showWin, setShowWin] = useState(false);
   const audioRef = useRef(null);
 
+  /* SERVICE WORKER */
   useEffect(() => {
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.register("/service-worker.js");
+    }
+  }, []);
+
+  /* QUITAR SPLASH */
+  useEffect(() => {
+    const splash = document.getElementById("splash");
+    if (splash) {
+      setTimeout(() => {
+        splash.style.opacity = "0";
+        splash.style.transition = "opacity .6s";
+        setTimeout(() => splash.remove(), 600);
+      }, 800);
     }
   }, []);
 
@@ -19,39 +37,40 @@ export default function App() {
       audioRef.current.play().catch(() => {});
       setMuted(false);
     }
-    if (navigator.vibrate) navigator.vibrate(40);
+    navigator.vibrate?.(40);
   };
 
   return (
     <div style={styles.app}>
+      {/* FUENTES */}
       <link
-        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800;900&family=Inter:wght@400;600&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800&family=Playfair+Display:wght@600;700&family=Inter:wght@400;600&display=swap"
         rel="stylesheet"
       />
 
+      {/* VIDEO */}
       <video autoPlay loop muted playsInline style={styles.video}>
         <source src="/VID-20260114-WA0018.mp4" type="video/mp4" />
       </video>
 
+      {/* AUDIO */}
       <audio ref={audioRef} loop muted={muted}>
         <source src="/deep.mp3" type="audio/mpeg" />
       </audio>
 
+      {/* TOP BAR */}
       <div style={styles.topBar}>
-        <button style={styles.topBtn} onClick={() => setLang(lang === "es" ? "en" : "es")}>
-          🌐 {lang.toUpperCase()}
-        </button>
         <button style={styles.topBtn} onClick={() => setMuted(!muted)}>
           {muted ? "🔇" : "🔊"}
         </button>
       </div>
 
+      {/* WIN OVERLAY */}
       {showWin && (
         <div style={styles.winOverlay} onClick={() => setShowWin(false)}>
           <div style={styles.winContent}>
-            <h1 style={styles.winTitle}>BIG WIN</h1>
+            <h1>🎉 BIG WIN 🎉</h1>
             <div style={styles.winAmount}>$25.000</div>
-            <div style={styles.winCoins}>🪙🪙🪙🪙🪙</div>
             <small>Toca para continuar</small>
           </div>
         </div>
@@ -60,224 +79,226 @@ export default function App() {
       <CoinRain active={showWin} />
 
       <div style={styles.overlay}>
-        {view === "home" && (
-          <Home playFX={playFX} setView={setView} triggerWin={() => setShowWin(true)} />
-        )}
-        {view === "register" && <Register playFX={playFX} onBack={() => setView("home")} />}
-        {view === "casino" && <Panel title="CASINO" onBack={() => setView("home")} />}
-        {view === "bonus" && <Panel title="BONO $10.000" onBack={() => setView("home")} />}
+        <Home playFX={playFX} triggerWin={() => setShowWin(true)} />
       </div>
+
+      <TelegramCTA />
     </div>
   );
 }
 
-function Home({ playFX, setView, triggerWin }) {
-  const [players, setPlayers] = useState(142);
+/* ================= HOME ================= */
+function Home({ playFX, triggerWin }) {
   const [jackpot, setJackpot] = useState(1534200);
-  const [win, setWin] = useState("");
+  const [fakeWin, setFakeWin] = useState("");
 
+  const names = ["Juan", "Carlos", "Luis", "Miguel", "Pedro"];
   const games = ["Sweet Bonanza", "Gates of Olympus", "Ocean Slots"];
-  const names = ["Juan", "Carlos", "Pedro", "Luis", "Miguel"];
 
   useEffect(() => {
-    setInterval(() => setPlayers(v => v + (Math.random() > 0.5 ? 1 : -1)), 4000);
-    setInterval(() => setJackpot(v => v + Math.floor(Math.random() * 400)), 1800);
     setInterval(() => {
-      setWin(
+      setJackpot(v => v + Math.floor(Math.random() * 500));
+    }, 2000);
+
+    setInterval(() => {
+      setFakeWin(
         `${names[Math.floor(Math.random() * names.length)]} ganó $${(
-          Math.random() * 80000 + 10000
+          Math.random() * 80000 +
+          10000
         ).toFixed(0)} en ${games[Math.floor(Math.random() * games.length)]}`
       );
-    }, 4500);
+    }, 4000);
   }, []);
 
   return (
     <div style={styles.home}>
+      {fakeWin && <div style={styles.fakeWinTop}>🏆 {fakeWin}</div>}
+
       <h1 style={styles.title}>OCEAN CASINO</h1>
-      <h2 style={styles.subtitle}>Vegas Style Online Casino</h2>
+      <h2 style={styles.subtitle}>Estilo Vegas · Pagos Rápidos</h2>
 
       <div style={styles.jackpotBox}>
-        <div style={styles.jackpotLabel}>JACKPOT</div>
-        <div style={styles.jackpotAmount}>${jackpot.toLocaleString("es-CL")}</div>
-        <div style={styles.jackpotCoins}>🪙 🪙 🪙</div>
+        <div style={styles.jackpotLabel}>💰 JACKPOT</div>
+        <div style={styles.jackpotAmount}>
+          ${jackpot.toLocaleString("es-CL")}
+        </div>
       </div>
 
-      <div style={styles.players}>👥 {players} jugadores conectados</div>
-
-      <div style={styles.buttons}>
-        <button
-          style={styles.primaryBtn}
-          onClick={() => {
-            playFX();
-            triggerWin();
-            setTimeout(() => setView("casino"), 1000);
-          }}
-        >
-          ENTRAR AL CASINO
-        </button>
-
-        <button style={styles.secondaryBtn} onClick={() => { playFX(); setView("register"); }}>
-          REGÍSTRATE
-        </button>
-
-        <button style={styles.secondaryBtn} onClick={() => { playFX(); setView("bonus"); }}>
-          🎁 BONO $10.000
-        </button>
-      </div>
-
-      <div style={styles.trustBar}>
-        🔒 SSL · 🎰 Curacao · 🏛 MGA · 🔞 18+
-      </div>
-
-      {win && <div style={styles.winTicker}>🏆 {win}</div>}
+      <button
+        style={styles.primaryBtn}
+        onClick={() => {
+          playFX();
+          triggerWin();
+          window.open(
+            `https://t.me/${TELEGRAM_USER}?text=${TELEGRAM_MSG}`,
+            "_blank"
+          );
+        }}
+      >
+        🎰 ACTIVAR BONO VIP
+      </button>
     </div>
   );
 }
 
-function Register({ playFX, onBack }) {
+/* ================= TELEGRAM CTA ================= */
+function TelegramCTA() {
   return (
-    <div style={styles.panel}>
-      <h2 style={styles.panelTitle}>Crear cuenta</h2>
-      <input style={styles.input} placeholder="Usuario" />
-      <input style={styles.input} placeholder="Email" />
-      <input style={styles.input} type="password" placeholder="Contraseña" />
-      <button style={styles.primaryBtn} onClick={playFX}>Crear cuenta</button>
-      <button style={styles.backBtn} onClick={onBack}>⬅ Volver</button>
-    </div>
+    <a
+      href={`https://t.me/${ Oceancasinoslots }?text=${TELEGRAM_MSG}`}
+      target="_blank"
+      rel="noreferrer"
+      style={styles.telegramBtn}
+    >
+      💬 Telegram VIP
+    </a>
   );
 }
 
-function Panel({ title, onBack }) {
-  return (
-    <div style={styles.panel}>
-      <h2 style={styles.panelTitle}>{title}</h2>
-      <button style={styles.backBtn} onClick={onBack}>⬅ Volver</button>
-    </div>
-  );
-}
-
+/* ================= MONEDAS ================= */
 function CoinRain({ active }) {
-  if (!active) return null;
-  return <div style={styles.coinLayer}>🪙🪙🪙🪙🪙</div>;
+  const [coins, setCoins] = useState([]);
+
+  useEffect(() => {
+    if (!active) return;
+
+    const createCoin = () => ({
+      id: Math.random(),
+      x: Math.random() * window.innerWidth,
+      y: -40,
+      vy: Math.random() * 2 + 2
+    });
+
+    let list = Array.from({ length: 20 }, createCoin);
+    setCoins(list);
+
+    let raf;
+    const animate = () => {
+      list = list.map(c => ({
+        ...c,
+        y: c.y + c.vy > window.innerHeight ? -40 : c.y + c.vy
+      }));
+      setCoins([...list]);
+      raf = requestAnimationFrame(animate);
+    };
+    animate();
+    return () => cancelAnimationFrame(raf);
+  }, [active]);
+
+  return (
+    <div style={styles.coinLayer}>
+      {coins.map(c => (
+        <div
+          key={c.id}
+          style={{ ...styles.coin, transform: `translate(${c.x}px, ${c.y}px)` }}
+        >
+          🪙
+        </div>
+      ))}
+    </div>
+  );
 }
 
+/* ================= STYLES ================= */
 const styles = {
   app: { minHeight: "100vh", position: "relative", overflow: "hidden" },
   video: { position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" },
-  overlay: { position: "absolute", inset: 0, background: "rgba(0,0,0,0.6)", color: "#fff" },
+  overlay: { position: "absolute", inset: 0, background: "rgba(0,0,0,0.6)" },
 
-  topBar: { position: "absolute", top: 12, right: 12, display: "flex", gap: 8, zIndex: 50 },
-  topBtn: { padding: "8px 12px", borderRadius: 10, border: "none", fontWeight: 600 },
+  topBar: { position: "absolute", top: 12, right: 12, zIndex: 20 },
+  topBtn: { padding: 10, borderRadius: 10 },
 
-  home: { textAlign: "center", paddingTop: "14vh", fontFamily: "Inter" },
+  home: { textAlign: "center", paddingTop: "14vh", color: "#fff" },
 
   title: {
     fontFamily: "Cinzel",
-    fontSize: 50,
+    fontSize: 48,
     color: "#FFD700",
-    textShadow: "0 0 20px rgba(255,215,0,0.9)"
+    textShadow: "0 0 20px red"
   },
 
-  subtitle: { fontFamily: "Cinzel", fontSize: 22, marginBottom: 16 },
+  subtitle: {
+    fontFamily: "Playfair Display",
+    fontSize: 20,
+    marginBottom: 20
+  },
 
   jackpotBox: {
-    border: "3px solid red",
-    borderRadius: 22,
-    padding: "16px 26px",
-    display: "inline-block",
-    boxShadow: "0 0 30px rgba(255,0,0,0.8)",
-    background: "rgba(0,0,0,0.65)"
+    border: "2px solid red",
+    padding: 20,
+    borderRadius: 20,
+    margin: "20px auto",
+    width: 320,
+    background: "rgba(0,0,0,0.7)"
   },
 
-  jackpotLabel: { fontFamily: "Cinzel", fontSize: 18, letterSpacing: 2 },
+  jackpotLabel: { fontFamily: "Cinzel", fontSize: 18 },
   jackpotAmount: {
     fontFamily: "Cinzel",
     fontSize: 42,
-    fontWeight: 900,
-    color: "#FFD700",
-    textShadow: "0 0 18px gold"
-  },
-  jackpotCoins: { marginTop: 6, fontSize: 22 },
-
-  players: { marginTop: 12 },
-
-  buttons: {
-    marginTop: 28,
-    display: "flex",
-    flexDirection: "column",
-    gap: 16,
-    alignItems: "center"
+    color: "gold",
+    textShadow: "0 0 12px gold"
   },
 
   primaryBtn: {
-    width: 320,
-    padding: 18,
-    borderRadius: 26,
+    marginTop: 30,
+    padding: "20px 30px",
+    borderRadius: 30,
     fontSize: 20,
     fontFamily: "Cinzel",
-    background: "linear-gradient(#FFD700,#FFB700)",
-    border: "2px solid red",
-    fontWeight: 800
+    background: "linear-gradient(#FFD700, #FFB700)",
+    border: "none",
+    cursor: "pointer"
   },
 
-  secondaryBtn: {
-    width: 320,
-    padding: 16,
-    borderRadius: 24,
-    fontFamily: "Cinzel",
-    background: "rgba(0,0,0,0.85)",
-    color: "#FFD700",
-    border: "2px solid #FFD700"
-  },
-
-  trustBar: { marginTop: 18, fontSize: 13 },
-
-  winTicker: {
+  fakeWinTop: {
     position: "fixed",
-    top: 90,
+    top: 10,
     left: "50%",
     transform: "translateX(-50%)",
-    background: "rgba(0,0,0,0.75)",
-    padding: "10px 18px",
+    background: "rgba(0,0,0,0.7)",
+    padding: "8px 16px",
     borderRadius: 20,
-    fontFamily: "Cinzel",
-    fontSize: 14,
-    zIndex: 40
+    fontSize: 14
   },
 
-  panel: {
-    margin: "20vh auto",
-    maxWidth: 420,
-    background: "rgba(0,0,0,0.8)",
-    padding: 24,
-    borderRadius: 20,
-    textAlign: "center"
+  telegramBtn: {
+    position: "fixed",
+    bottom: 20,
+    right: 20,
+    background: "#229ED9",
+    color: "#fff",
+    padding: "14px 18px",
+    borderRadius: 50,
+    fontWeight: 700,
+    textDecoration: "none",
+    zIndex: 999
   },
 
-  panelTitle: { fontFamily: "Cinzel", fontSize: 28 },
-  input: { width: "100%", padding: 12, marginTop: 10, borderRadius: 12 },
-  backBtn: { marginTop: 16 },
+  coinLayer: {
+    position: "fixed",
+    inset: 0,
+    pointerEvents: "none",
+    zIndex: 10
+  },
+
+  coin: { position: "absolute", fontSize: 26 },
 
   winOverlay: {
     position: "fixed",
     inset: 0,
     background: "rgba(0,0,0,0.9)",
     display: "flex",
-    justifyContent: "center",
     alignItems: "center",
+    justifyContent: "center",
     zIndex: 999
   },
 
-  winContent: { textAlign: "center", fontFamily: "Cinzel", color: "gold" },
-  winTitle: { fontSize: 42 },
-  winAmount: { fontSize: 48 },
-  winCoins: { fontSize: 32 },
-
-  coinLayer: {
-    position: "fixed",
-    inset: 0,
-    pointerEvents: "none",
-    fontSize: 30,
+  winContent: {
+    color: "gold",
+    fontFamily: "Cinzel",
     textAlign: "center"
-  }
+  },
+
+  winAmount: { fontSize: 46 }
 };
