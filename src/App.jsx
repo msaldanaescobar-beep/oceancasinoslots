@@ -96,11 +96,11 @@ function Home({ playFX, triggerWin }) {
   const games = ["Sweet Bonanza", "Gates of Olympus", "Ocean Slots"];
 
   useEffect(() => {
-    setInterval(() => {
+    const j = setInterval(() => {
       setJackpot(v => v + Math.floor(Math.random() * 500));
     }, 2000);
 
-    setInterval(() => {
+    const f = setInterval(() => {
       setFakeWin(
         `${names[Math.floor(Math.random() * names.length)]} ganó $${(
           Math.random() * 80000 +
@@ -108,6 +108,11 @@ function Home({ playFX, triggerWin }) {
         ).toFixed(0)} en ${games[Math.floor(Math.random() * games.length)]}`
       );
     }, 4000);
+
+    return () => {
+      clearInterval(j);
+      clearInterval(f);
+    };
   }, []);
 
   return (
@@ -145,7 +150,7 @@ function Home({ playFX, triggerWin }) {
 function TelegramCTA() {
   return (
     <a
-      href={`https://t.me/${ Oceancasinoslots }?text=${TELEGRAM_MSG}`}
+      href={`https://t.me/${TELEGRAM_USER}?text=${TELEGRAM_MSG}`}
       target="_blank"
       rel="noreferrer"
       style={styles.telegramBtn}
@@ -201,22 +206,29 @@ function CoinRain({ active }) {
 
 /* ================= STYLES ================= */
 const styles = {
-  app: { minHeight: "100vh", position: "relative", overflow: "hidden" },
+  app: {
+    minHeight: "100vh",
+    position: "relative",
+    overflow: "hidden",
+    background: "#021c2d"
+  },
+
   video: {
-  position: "absolute",
-  inset: 0,
-  width: "100%",
-  height: "100%",
-  objectFit: "cover",
-  zIndex: 0
-},
+    position: "absolute",
+    inset: 0,
+    width: "100%",
+    height: "100%",
+    objectFit: "cover",
+    zIndex: 0
+  },
 
   overlay: {
-  position: "absolute",
-  inset: 0,
-  background: "linear-gradient(to bottom, rgba(0,0,0,0.35), rgba(0,0,0,0.65))",
-  zIndex: 2
-},
+    position: "absolute",
+    inset: 0,
+    background:
+      "linear-gradient(to bottom, rgba(0,0,0,0.35), rgba(0,0,0,0.65))",
+    zIndex: 2
+  },
 
   topBar: { position: "absolute", top: 12, right: 12, zIndex: 20 },
   topBtn: { padding: 10, borderRadius: 10 },
