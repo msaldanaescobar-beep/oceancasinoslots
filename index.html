@@ -11,121 +11,73 @@
 
     <title>Ocean Casino Slots</title>
 
-    <!-- COLOR BARRA ANDROID / PWA -->
-    <meta name="theme-color" content="#000000" />
+    <!-- COLOR BARRA ANDROID -->
+    <meta name="theme-color" content="#04293A" />
 
-    <!-- DESCRIPCIÓN SEO -->
+    <!-- DESCRIPCIÓN -->
     <meta
       name="description"
-      content="Ocean Casino Slots – Casino online premium estilo Vegas con jackpots y slots."
+      content="Ocean Casino Slots – Juega slots y casino online con bono de bienvenida."
     />
 
     <!-- MANIFEST PWA -->
     <link rel="manifest" href="/manifest.json" />
 
     <!-- ICONOS -->
-    <link rel="icon" type="image/png" href="/icon-192.png" />
+    <link rel="icon" href="/icon-192.png" />
+    <link rel="apple-touch-icon" href="/icon-192.png" />
 
-    <!-- FUENTES VEGAS -->
-    <link
-      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800&family=Inter:wght@400;600;700&display=swap"
-      rel="stylesheet"
-    />
-
-    <!-- SPLASH SCREEN STYLE -->
     <style>
+      /* SPLASH */
       #splash {
         position: fixed;
         inset: 0;
-        background: #000;
+        background: radial-gradient(circle at top, #06283d, #000);
         display: flex;
-        flex-direction: column;
         align-items: center;
         justify-content: center;
         z-index: 9999;
-        color: #d4af37;
-        font-family: "Cinzel", serif;
+        transition: opacity 0.6s ease;
       }
 
       #splash img {
         width: 140px;
-        margin-bottom: 16px;
-        animation: glow 2s infinite alternate;
+        height: 140px;
+        border-radius: 28px;
+        box-shadow: 0 0 30px rgba(255,215,0,0.8);
+        animation: pulse 1.6s infinite;
       }
 
-      #splash p {
-        font-size: 18px;
-        letter-spacing: 1px;
-        opacity: 0.9;
-      }
-
-      @keyframes glow {
-        from {
-          filter: drop-shadow(0 0 6px #d4af37);
-        }
-        to {
-          filter: drop-shadow(0 0 24px #ffd700);
-        }
+      @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.06); }
+        100% { transform: scale(1); }
       }
     </style>
   </head>
 
   <body style="margin:0; padding:0; background:#000;">
-    <!-- SPLASH SCREEN -->
+    <!-- SPLASH -->
     <div id="splash">
       <img src="/icon-512.png" alt="Ocean Casino" />
-      <p>Loading Casino…</p>
     </div>
-<!-- SPLASH SCREEN -->
-<div id="splash">
-  <div class="splash-content">
-    <h1>OCEAN CASINO</h1>
-    <p>Cargando experiencia premium…</p>
-  </div>
-</div>
 
-<style>
-  #splash {
-    position: fixed;
-    inset: 0;
-    background: radial-gradient(circle at center, #021f2f, #000);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-  }
-
-  .splash-content {
-    text-align: center;
-    color: gold;
-    font-family: 'Cinzel', serif;
-    animation: splashPulse 1.6s infinite;
-  }
-
-  .splash-content h1 {
-    font-size: 42px;
-    letter-spacing: 2px;
-    text-shadow:
-      0 0 10px gold,
-      0 0 25px rgba(255,0,0,0.6);
-  }
-
-  .splash-content p {
-    margin-top: 12px;
-    opacity: 0.85;
-  }
-
-  @keyframes splashPulse {
-    0% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.04); opacity: 0.85; }
-    100% { transform: scale(1); opacity: 1; }
-  }
-</style>
-
-    <!-- APP -->
     <div id="root"></div>
 
-    <!-- ENTRADA VITE / REACT -->
+    <!-- SCRIPT SPLASH (CLAVE) -->
+    <script>
+      window.addEventListener("load", () => {
+        const splash = document.getElementById("splash");
+        if (splash) {
+          setTimeout(() => {
+            splash.style.opacity = "0";
+            setTimeout(() => splash.remove(), 600);
+          }, 900);
+        }
+      });
+    </script>
+
+    <!-- VITE / REACT -->
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
