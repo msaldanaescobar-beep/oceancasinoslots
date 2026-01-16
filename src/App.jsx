@@ -14,19 +14,7 @@ export default function App() {
       navigator.serviceWorker.register("/service-worker.js");
     }
   }, []);
-  
-/* QUITAR SPLASH SCREEN */
-  useEffect(() => {
-    const splash = document.getElementById("splash");
-    if (splash) {
-      setTimeout(() => {
-        splash.style.opacity = "0";
-        splash.style.transition = "opacity 0.6s ease";
-        setTimeout(() => splash.remove(), 600);
-      }, 800);
-    }
-  }, []);
-  
+
   const playFX = () => {
     if (audioRef.current) {
       audioRef.current.muted = false;
@@ -64,25 +52,10 @@ export default function App() {
         </button>
       </div>
 
-      {/* ANIMACIÓN VICTORIA FULL */}
-      {showWin && (
-        <div style={styles.winOverlay} onClick={() => setShowWin(false)}>
-          <div style={styles.winContent}>
-            <h1 style={styles.winTitle}>🎉 BIG WIN 🎉</h1>
-            <div style={styles.winAmount}>$25.000</div>
-            <div style={styles.winCoins}>🪙🪙🪙🪙🪙</div>
-            <small>Toca para continuar</small>
-          </div>
-        </div>
-      )}
-
+      {/* OVERLAY */}
       <div style={styles.overlay}>
         {view === "home" && (
-          <Home
-            playFX={playFX}
-            setView={setView}
-            triggerWin={() => setShowWin(true)}
-          />
+          <Home playFX={playFX} setView={setView} triggerWin={() => setShowWin(true)} />
         )}
 
         {view === "casino" && (
@@ -91,9 +64,7 @@ export default function App() {
           </Panel>
         )}
 
-        {view === "register" && (
-          <Register playFX={playFX} onBack={() => setView("home")} />
-        )}
+        {view === "register" && <Register playFX={playFX} onBack={() => setView("home")} />}
 
         {view === "bonus" && (
           <Panel title="🎁 BONO $10.000" onBack={() => setView("home")}>
@@ -101,12 +72,12 @@ export default function App() {
           </Panel>
         )}
       </div>
+
+      {/* MONEDAS FÍSICAS */}
+      <CoinRain active={showWin || view === "home"} />
     </div>
   );
 }
-
-{/* MONEDAS FÍSICAS */}
-<CoinRain active={showWin || view === "home"} />
 
 /* ================= HOME ================= */
 function Home({ playFX, setView, triggerWin }) {
@@ -115,31 +86,13 @@ function Home({ playFX, setView, triggerWin }) {
   const [win, setWin] = useState("");
   const [withdraw, setWithdraw] = useState("");
 
-  const games = ["Sweet Bonanza", "Gates of Olympus", "Ocean Slots", "777 Deluxe"];
-  const names = ["Juan", "Carlos", "Pedro", "Luis", "Miguel"];
-
   useEffect(() => {
-    setInterval(() => {
-      setPlayers(v => v + (Math.random() > 0.5 ? 1 : -1));
-    }, 4000);
-
-    setInterval(() => {
-      setJackpot(v => v + Math.floor(Math.random() * 500));
-    }, 2000);
-
-    setInterval(() => {
-      const msg = `${names[Math.floor(Math.random() * names.length)]} ganó $${(
-        Math.random() * 90000 + 10000
-      ).toFixed(0)} en ${games[Math.floor(Math.random() * games.length)]}`;
-      setWin(msg);
-    }, 5000);
-
-    setInterval(() => {
-      const msg = `💸 ${
-        names[Math.floor(Math.random() * names.length)]
-      } retiró $${(Math.random() * 500 + 50).toFixed(0)}`;
-      setWithdraw(msg);
-    }, 6500);
+    const p = setInterval(() => setPlayers(v => v + (Math.random() > 0.5 ? 1 : -1)), 4000);
+    const j = setInterval(() => setJackpot(v => v + Math.floor(Math.random() * 500)), 2000);
+    return () => {
+      clearInterval(p);
+      clearInterval(j);
+    };
   }, []);
 
   return (
@@ -147,66 +100,26 @@ function Home({ playFX, setView, triggerWin }) {
       <h1 style={styles.title}>OCEAN CASINO</h1>
       <h2 style={styles.subtitle}>Play · Win · Enjoy</h2>
 
-      {/* JACKPOT */}
       <div style={styles.jackpotBox}>
         <div style={styles.jackpotLabel}>💰 JACKPOT</div>
-        <div style={styles.jackpotAmount}>
-          ${jackpot.toLocaleString("es-CL")}
-        </div>
-
-        <div style={styles.coinsWrapper}>
-          <span style={styles.coin}>🪙</span>
-          <span style={styles.coin}>🪙</span>
-          <span style={styles.coin}>🪙</span>
-        </div>
+        <div style={styles.jackpotAmount}>${jackpot.toLocaleString()}</div>
       </div>
 
       <div style={styles.players}>👥 {players} jugadores conectados</div>
 
       <div style={styles.buttons}>
-        <button
-          style={styles.primaryBtn}
-          onClick={() => {
-            playFX();
-            triggerWin();
-            setTimeout(() => setView("casino"), 1200);
-          }}
-        >
+        <button style={styles.primaryBtn} onClick={() => { playFX(); triggerWin(); }}>
           ENTRAR AL CASINO
         </button>
 
-        <button
-          style={styles.secondaryBtn}
-          onClick={() => {
-            playFX();
-            setView("register");
-          }}
-        >
+        <button style={styles.secondaryBtn} onClick={() => { playFX(); setView("register"); }}>
           REGÍSTRATE
         </button>
 
-        <button
-          style={styles.secondaryBtn}
-          onClick={() => {
-            playFX();
-            setView("bonus");
-          }}
-        >
+        <button style={styles.secondaryBtn} onClick={() => { playFX(); setView("bonus"); }}>
           🎁 BONO $10.000
         </button>
       </div>
-
-      {/* BARRA CONFIANZA */}
-      <div style={styles.trustBar}>
-        <span>🔒 SSL</span>
-        <span>🎰 Curacao</span>
-        <span>🏛 MGA</span>
-        <span>🔞 18+</span>
-      </div>
-
-      {/* TICKERS */}
-      {win && <div style={styles.winTicker}>🏆 {win}</div>}
-      {withdraw && <div style={styles.withdrawTicker}>{withdraw}</div>}
     </div>
   );
 }
@@ -216,18 +129,11 @@ function Register({ playFX, onBack }) {
   return (
     <div style={styles.panel}>
       <h2 style={styles.panelTitle}>Crear cuenta</h2>
-
       <input style={styles.input} placeholder="Usuario" />
       <input style={styles.input} placeholder="Email" />
       <input style={styles.input} type="password" placeholder="Contraseña" />
-
-      <button style={styles.primaryBtn} onClick={playFX}>
-        Crear cuenta
-      </button>
-
-      <button style={styles.backBtn} onClick={onBack}>
-        ⬅ Volver
-      </button>
+      <button style={styles.primaryBtn} onClick={playFX}>Crear cuenta</button>
+      <button style={styles.backBtn} onClick={onBack}>⬅ Volver</button>
     </div>
   );
 }
@@ -237,77 +143,31 @@ function Panel({ title, children, onBack }) {
   return (
     <div style={styles.panel}>
       <h2 style={styles.panelTitle}>{title}</h2>
-      <p style={styles.panelText}>{children}</p>
-      <button style={styles.backBtn} onClick={onBack}>
-        ⬅ Volver
-      </button>
+      <p>{children}</p>
+      <button style={styles.backBtn} onClick={onBack}>⬅ Volver</button>
     </div>
   );
 }
 
-/* ================= MONEDAS FÍSICAS ================= */
+/* ================= MONEDAS ================= */
 function CoinRain({ active }) {
   const [coins, setCoins] = useState([]);
 
   useEffect(() => {
     if (!active) return;
+    const spawn = () =>
+      setCoins(c =>
+        [...c, { id: Math.random(), x: Math.random() * window.innerWidth, y: -20 }]
+      );
 
-    const createCoin = () => ({
-      id: Math.random(),
-      x: Math.random() * window.innerWidth,
-      y: -40,
-      vx: (Math.random() - 0.5) * 1.5,
-      vy: Math.random() * 1 + 2,
-      rotate: Math.random() * 360,
-      vr: (Math.random() - 0.5) * 8
-    });
-
-    let localCoins = Array.from({ length: 18 }, createCoin);
-    setCoins(localCoins);
-
-    let raf;
-    const gravity = 0.15;
-
-    const animate = () => {
-      localCoins = localCoins.map(c => {
-        let ny = c.y + c.vy;
-        let nv = c.vy + gravity;
-
-        if (ny > window.innerHeight + 40) {
-          return createCoin();
-        }
-
-        return {
-          ...c,
-          x: c.x + c.vx,
-          y: ny,
-          vy: nv,
-          rotate: c.rotate + c.vr
-        };
-      });
-
-      setCoins([...localCoins]);
-      raf = requestAnimationFrame(animate);
-    };
-
-    animate();
-    return () => cancelAnimationFrame(raf);
+    const i = setInterval(spawn, 300);
+    return () => clearInterval(i);
   }, [active]);
-
-  if (!active) return null;
 
   return (
     <div style={styles.coinLayer}>
       {coins.map(c => (
-        <div
-          key={c.id}
-          style={{
-            ...styles.coinPhysic,
-            transform: `translate(${c.x}px, ${c.y}px) rotate(${c.rotate}deg)`
-          }}
-        >
-          🪙
-        </div>
+        <div key={c.id} style={{ ...styles.coinPhysic, left: c.x, top: c.y }}>🪙</div>
       ))}
     </div>
   );
@@ -320,174 +180,36 @@ const styles = {
   overlay: { position: "absolute", inset: 0, background: "rgba(0,0,0,0.55)", color: "#fff" },
 
   topBar: { position: "absolute", top: 12, right: 12, display: "flex", gap: 8, zIndex: 20 },
-  topBtn: { padding: "8px 12px", borderRadius: 10, border: "none", fontWeight: 600 },
+  topBtn: { padding: "8px 12px", borderRadius: 10, border: "none" },
 
   home: { textAlign: "center", paddingTop: "14vh", fontFamily: "Inter" },
+
   title: {
-  fontFamily: "Cinzel",
-  fontSize: 48,
-  fontWeight: 800,
-  letterSpacing: 2,
-  color: "#FFD700",
-  textShadow: `
-    0 0 8px #FFD700,
-    0 0 16px rgba(255,215,0,0.8),
-    0 0 32px rgba(255,0,0,0.6)
-  `
-},
-
-subtitle: {
-  fontFamily: "Cinzel",
-  fontSize: 22,
-  marginTop: 6,
-  color: "#fff",
-  textShadow: "0 0 6px rgba(255,255,255,0.6)"
-},
-
-jackpotLabel: {
-  fontFamily: "Cinzel",
-  fontSize: 18,
-  color: "#fff",
-  letterSpacing: 1.5,
-  textShadow: "0 0 6px red"
-},
-
-jackpotAmount: {
-  fontFamily: "Cinzel",
-  fontSize: 42,
-  fontWeight: 800,
-  background: "linear-gradient(180deg, #FFD700, #FFB700)",
-  WebkitBackgroundClip: "text",
-  WebkitTextFillColor: "transparent",
-  textShadow: `
-    0 0 12px rgba(255,215,0,0.9),
-    0 0 28px rgba(255,0,0,0.6)
-  `,
-  animation: "jackpotGlow 1.8s infinite"
-},
-
-primaryBtn: {
-  width: 320,
-  padding: 20,
-  borderRadius: 26,
-  fontSize: 20,
-  fontWeight: 800,
-  fontFamily: "Cinzel",
-  background: "linear-gradient(180deg, #FFD700, #FFB700)",
-  color: "#000",
-  border: "2px solid #FF1A1A",
-  boxShadow: `
-    0 0 12px rgba(255,215,0,0.9),
-    0 0 24px rgba(255,0,0,0.6)
-  `,
-  cursor: "pointer"
-},
-
-secondaryBtn: {
-  width: 320,
-  padding: 18,
-  borderRadius: 24,
-  fontSize: 17,
-  fontFamily: "Cinzel",
-  background: "rgba(0,0,0,0.8)",
-  color: "#FFD700",
-  border: "2px solid #FFD700",
-  boxShadow: "0 0 10px rgba(255,215,0,0.6)",
-  cursor: "pointer"
-},
-
-
-  trustBar: {
-    marginTop: 18,
-    display: "flex",
-    justifyContent: "center",
-    gap: 14,
-    fontSize: 13,
-    opacity: 0.9
-  },
-
-  panel: {
-    margin: "18vh auto",
-    width: "90%",
-    maxWidth: 420,
-    background: "rgba(0,0,0,0.75)",
-    padding: 24,
-    borderRadius: 22,
-    textAlign: "center"
-  },
-
-  panelTitle: { fontFamily: "Cinzel", fontSize: 26 },
-  panelText: { marginTop: 12, fontSize: 16 },
-
-  input: {
-    width: "100%",
-    padding: 12,
-    marginTop: 10,
-    borderRadius: 12,
-    border: "none"
-  },
-
-  backBtn: {
-    marginTop: 16,
-    padding: 12,
-    borderRadius: 14,
-    border: "none"
-  },
-
-  winTicker: {
-    position: "fixed",
-    bottom: 90,
-    left: "50%",
-    transform: "translateX(-50%)",
-    background: "rgba(0,0,0,0.75)",
-    padding: "10px 18px",
-    borderRadius: 20,
-    fontSize: 14
-  },
-
-  withdrawTicker: {
-    position: "fixed",
-    bottom: 50,
-    left: "50%",
-    transform: "translateX(-50%)",
-    background: "rgba(20,20,20,0.8)",
-    padding: "8px 16px",
-    borderRadius: 18,
-    fontSize: 13
-  },
-
-  winOverlay: {
-    position: "fixed",
-    inset: 0,
-    background: "rgba(0,0,0,0.92)",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    zIndex: 999
-  },
-
-  winContent: {
-    textAlign: "center",
-    color: "gold",
     fontFamily: "Cinzel",
-    animation: "jackpotGlow 1.5s infinite"
+    fontSize: 48,
+    color: "#FFD700",
+    textShadow: "0 0 20px gold"
   },
 
-  winTitle: { fontSize: 42 },
-  winAmount: { fontSize: 48, margin: "12px 0" },
-  winCoins: { fontSize: 32 }
+  subtitle: { fontSize: 22 },
 
-  coinLayer: {
-  position: "fixed",
-  inset: 0,
-  pointerEvents: "none",
-  zIndex: 15
-},
+  jackpotBox: { marginTop: 20 },
+  jackpotLabel: { fontSize: 18 },
+  jackpotAmount: { fontSize: 42, fontWeight: 800 },
 
-coinPhysic: {
-  position: "absolute",
-  fontSize: 26,
-  filter: "drop-shadow(0 0 6px gold)"
-},
+  players: { marginTop: 12 },
 
+  buttons: { marginTop: 20, display: "flex", flexDirection: "column", gap: 12 },
+
+  primaryBtn: { padding: 18, borderRadius: 20, fontSize: 18 },
+  secondaryBtn: { padding: 16, borderRadius: 18 },
+
+  panel: { margin: "15vh auto", padding: 24, background: "rgba(0,0,0,0.8)" },
+  panelTitle: { fontSize: 26 },
+
+  input: { width: "100%", padding: 12, marginTop: 10 },
+  backBtn: { marginTop: 14 },
+
+  coinLayer: { position: "fixed", inset: 0, pointerEvents: "none" },
+  coinPhysic: { position: "absolute", fontSize: 26 }
 };
