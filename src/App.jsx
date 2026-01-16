@@ -94,13 +94,20 @@ function Home({ playFX, setView }) {
       <h2 style={styles.subtitle}>It’s time to play</h2>
 
       {/* JACKPOT */}
-      <div style={styles.jackpotBox}>
-        💰 JACKPOT <br />
-        <span style={styles.jackpotAmount}>
-          ${jackpot.toLocaleString("es-CL")}
-        </span>
-        <div style={styles.coins}>🪙 🪙 🪙</div>
-      </div>
+<div style={styles.jackpotBox}>
+  <div style={styles.jackpotLabel}>💰 JACKPOT</div>
+
+  <div style={styles.jackpotAmount}>
+    ${jackpot.toLocaleString("es-CL")}
+  </div>
+
+  {/* MONEDAS */}
+  <div style={styles.coinsWrapper}>
+    <span style={styles.coin}>🪙</span>
+    <span style={styles.coin}>🪙</span>
+    <span style={styles.coin}>🪙</span>
+  </div>
+</div>
 
       <div style={styles.players}>👥 {players} jugadores conectados</div>
 
@@ -166,16 +173,42 @@ const styles = {
   subtitle: { fontFamily: "Cinzel", fontSize: 20 },
 
   jackpotBox: {
-    marginTop: 18,
-    padding: 16,
-    border: "3px solid red",
-    borderRadius: 18,
-    display: "inline-block",
-    fontFamily: "Cinzel",
-    boxShadow: "0 0 20px red"
-  },
-  jackpotAmount: { fontSize: 30, fontWeight: 800, color: "#fff" },
-  coins: { marginTop: 6, animation: "pulse 2s infinite" },
+  position: "relative",
+  marginTop: 18,
+  padding: "18px 24px 28px",
+  border: "3px solid red",
+  borderRadius: 20,
+  display: "inline-block",
+  fontFamily: "Cinzel",
+  boxShadow: "0 0 22px rgba(255,0,0,0.8)",
+  background: "rgba(0,0,0,0.55)",
+},
+
+jackpotLabel: {
+  fontSize: 16,
+  letterSpacing: 1,
+},
+
+jackpotAmount: {
+  fontSize: 34,
+  fontWeight: 800,
+  marginTop: 6,
+},
+
+coinsWrapper: {
+  position: "absolute",
+  bottom: -14,
+  left: "50%",
+  transform: "translateX(-50%)",
+  display: "flex",
+  gap: 8,
+},
+
+coin: {
+  fontSize: 20,
+  animation: "coinFloat 2.5s infinite ease-in-out",
+},
+" },
 
   players: { marginTop: 10, fontSize: 16 },
 
