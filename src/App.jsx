@@ -6,24 +6,24 @@ export default function App() {
   const [muted, setMuted] = useState(true);
   const audioRef = useRef(null);
 
-  const playSound = () => {
+  const playFX = () => {
     if (audioRef.current) {
       audioRef.current.muted = false;
       audioRef.current.play().catch(() => {});
       setMuted(false);
     }
-    if (navigator.vibrate) navigator.vibrate(40);
+    if (navigator.vibrate) navigator.vibrate(50);
   };
 
   return (
     <div style={styles.app}>
       {/* FUENTES */}
       <link
-        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Inter:wght@400;600;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800&family=Inter:wght@400;600;700&display=swap"
         rel="stylesheet"
       />
 
-      {/* VIDEO */}
+      {/* VIDEO FONDO */}
       <video autoPlay loop muted playsInline style={styles.video}>
         <source src="/VID-20260114-WA0018.mp4" type="video/mp4" />
       </video>
@@ -45,24 +45,19 @@ export default function App() {
 
       <div style={styles.overlay}>
         {view === "home" && (
-          <Home playSound={playSound} setView={setView} />
+          <Home playFX={playFX} setView={setView} />
         )}
-
         {view === "casino" && (
           <Panel title="🎰 CASINO" onBack={() => setView("home")}>
-            Juegos en vivo, slots premium y jackpots progresivos.
+            Slots premium · Casino en vivo · Pagos rápidos
           </Panel>
         )}
-
         {view === "register" && (
-          <Panel title="📝 REGISTRO" onBack={() => setView("home")}>
-            Registro rápido · Sin verificación · Acceso inmediato.
-          </Panel>
+          <Register onBack={() => setView("home")} playFX={playFX} />
         )}
-
         {view === "bonus" && (
           <Panel title="🎁 BONO $10.000" onBack={() => setView("home")}>
-            Bono promocional exclusivo para nuevos jugadores.
+            Bono exclusivo para nuevos jugadores.
           </Panel>
         )}
       </div>
@@ -71,56 +66,88 @@ export default function App() {
 }
 
 /* ================= HOME ================= */
-function Home({ playSound, setView }) {
-  const [players, setPlayers] = useState(148);
-  const [jackpot, setJackpot] = useState(1532000);
+function Home({ playFX, setView }) {
+  const [players, setPlayers] = useState(142);
+  const [jackpot, setJackpot] = useState(1534200);
+  const [win, setWin] = useState("");
+
+  const games = ["Sweet Bonanza", "Gates of Olympus", "777 Deluxe", "Ocean Slots"];
+  const names = ["Juan", "Carlos", "Pedro", "Luis", "Miguel"];
 
   useEffect(() => {
     const p = setInterval(() => setPlayers(v => v + (Math.random() > 0.5 ? 1 : -1)), 4000);
-    const j = setInterval(() => setJackpot(v => v + Math.floor(Math.random() * 200)), 2500);
-    return () => { clearInterval(p); clearInterval(j); };
+    const j = setInterval(() => setJackpot(v => v + Math.floor(Math.random() * 300)), 2000);
+
+    const w = setInterval(() => {
+      const msg = `${names[Math.floor(Math.random() * names.length)]} ganó $${(
+        Math.random() * 90000 + 10000
+      ).toFixed(0)} en ${games[Math.floor(Math.random() * games.length)]}`;
+      setWin(msg);
+    }, 4500);
+
+    return () => { clearInterval(p); clearInterval(j); clearInterval(w); };
   }, []);
 
   return (
     <div style={styles.home}>
-      <h1 style={styles.title}>CASINO ONLINE</h1>
-      <h2 style={styles.subtitle}>Es hora de jugar</h2>
+      <h1 style={styles.title}>ONLINE CASINO</h1>
+      <h2 style={styles.subtitle}>It’s time to play</h2>
 
-      <div style={styles.jackpot}>
-        💰 JACKPOT: ${jackpot.toLocaleString("es-CL")}
+      {/* JACKPOT */}
+      <div style={styles.jackpotBox}>
+        💰 JACKPOT <br />
+        <span style={styles.jackpotAmount}>
+          ${jackpot.toLocaleString("es-CL")}
+        </span>
+        <div style={styles.coins}>🪙 🪙 🪙</div>
       </div>
 
-      <div style={styles.players}>
-        👥 {players} jugadores conectados
-      </div>
+      <div style={styles.players}>👥 {players} jugadores conectados</div>
 
       <div style={styles.buttons}>
-        <button style={styles.primaryBtn} onClick={() => { playSound(); setView("casino"); }}>
+        <button style={styles.primaryBtn} onClick={() => { playFX(); setView("casino"); }}>
           ENTRAR AL CASINO
         </button>
-
-        <button style={styles.secondaryBtn} onClick={() => { playSound(); setView("register"); }}>
+        <button style={styles.secondaryBtn} onClick={() => { playFX(); setView("register"); }}>
           REGÍSTRATE
         </button>
-
-        <button style={styles.secondaryBtn} onClick={() => { playSound(); setView("bonus"); }}>
+        <button style={styles.secondaryBtn} onClick={() => { playFX(); setView("bonus"); }}>
           🎁 BONO $10.000
         </button>
       </div>
+
+      {/* LIVE WINS */}
+      {win && <div style={styles.winTicker}>🏆 {win}</div>}
     </div>
   );
 }
 
-/* ================= PANEL REUTILIZABLE ================= */
+/* ================= REGISTRO ================= */
+function Register({ onBack, playFX }) {
+  return (
+    <div style={styles.panel}>
+      <h2 style={styles.panelTitle}>Crear cuenta</h2>
+
+      <input placeholder="Usuario" style={styles.input} />
+      <input placeholder="Email" style={styles.input} />
+      <input type="password" placeholder="Contraseña" style={styles.input} />
+
+      <button style={styles.primaryBtn} onClick={playFX}>
+        Crear cuenta
+      </button>
+
+      <button style={styles.backBtn} onClick={onBack}>⬅ Volver</button>
+    </div>
+  );
+}
+
+/* ================= PANEL ================= */
 function Panel({ title, children, onBack }) {
   return (
     <div style={styles.panel}>
       <h2 style={styles.panelTitle}>{title}</h2>
       <p style={styles.panelText}>{children}</p>
-
-      <button style={styles.backBtn} onClick={onBack}>
-        ⬅ Volver
-      </button>
+      <button style={styles.backBtn} onClick={onBack}>⬅ Volver</button>
     </div>
   );
 }
@@ -135,33 +162,43 @@ const styles = {
   topBtn: { padding: "8px 12px", borderRadius: 10, border: "none", fontWeight: 600 },
 
   home: { textAlign: "center", paddingTop: "14vh", fontFamily: "Inter" },
-  title: { fontFamily: "Cinzel", fontSize: 38 },
-  subtitle: { fontFamily: "Cinzel", fontSize: 20, opacity: 0.9 },
+  title: { fontFamily: "Cinzel", fontSize: 40 },
+  subtitle: { fontFamily: "Cinzel", fontSize: 20 },
 
-  jackpot: { marginTop: 16, fontSize: 22, color: "#00FFD1", fontWeight: 700 },
-  players: { marginTop: 6, fontSize: 16, opacity: 0.85 },
+  jackpotBox: {
+    marginTop: 18,
+    padding: 16,
+    border: "3px solid red",
+    borderRadius: 18,
+    display: "inline-block",
+    fontFamily: "Cinzel",
+    boxShadow: "0 0 20px red"
+  },
+  jackpotAmount: { fontSize: 30, fontWeight: 800, color: "#fff" },
+  coins: { marginTop: 6, animation: "pulse 2s infinite" },
+
+  players: { marginTop: 10, fontSize: 16 },
 
   buttons: { marginTop: 30, display: "flex", flexDirection: "column", gap: 16, alignItems: "center" },
 
-  primaryBtn: {
-    width: 300, padding: 18, borderRadius: 22,
-    fontSize: 18, fontWeight: 700, border: "none"
-  },
-  secondaryBtn: {
-    width: 300, padding: 16, borderRadius: 20,
-    fontSize: 16, fontWeight: 600, border: "none"
-  },
+  primaryBtn: { width: 300, padding: 18, borderRadius: 22, fontSize: 18, fontWeight: 700 },
+  secondaryBtn: { width: 300, padding: 16, borderRadius: 20, fontSize: 16 },
 
-  panel: {
-    margin: "20vh auto",
-    width: "90%",
-    maxWidth: 420,
+  panel: { margin: "18vh auto", width: "90%", maxWidth: 420, background: "rgba(0,0,0,0.75)", padding: 24, borderRadius: 20 },
+  panelTitle: { fontFamily: "Cinzel", fontSize: 26 },
+  panelText: { marginTop: 12, fontSize: 16 },
+
+  input: { width: "100%", padding: 12, marginTop: 10, borderRadius: 12, border: "none" },
+  backBtn: { marginTop: 16, padding: 12, borderRadius: 14, border: "none" },
+
+  winTicker: {
+    position: "fixed",
+    bottom: 14,
+    left: "50%",
+    transform: "translateX(-50%)",
     background: "rgba(0,0,0,0.75)",
-    padding: 24,
+    padding: "10px 18px",
     borderRadius: 20,
-    textAlign: "center"
-  },
-  panelTitle: { fontFamily: "Cinzel", fontSize: 24 },
-  panelText: { marginTop: 12, fontSize: 16, opacity: 0.9 },
-  backBtn: { marginTop: 20, padding: 12, borderRadius: 14, border: "none" }
+    fontSize: 14
+  }
 };
