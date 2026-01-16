@@ -185,14 +185,18 @@ const styles = {
 },
 
 jackpotLabel: {
-  fontSize: 16,
-  letterSpacing: 1,
+  fontSize: 18,
+  letterSpacing: 2,
+  color: "#fff",
+  WebkitTextStroke: "1px red",
 },
 
 jackpotAmount: {
-  fontSize: 34,
+  fontSize: 38,
   fontWeight: 800,
   marginTop: 6,
+  color: "#fff",
+  textShadow: "0 0 12px red",
 },
 
 coinsWrapper: {
@@ -204,11 +208,19 @@ coinsWrapper: {
   gap: 8,
 },
 
+  const styleSheet = document.styleSheets[0];
+styleSheet.insertRule(`
+@keyframes coinFloat {
+  0% { transform: translateY(0); opacity: 0.8; }
+  50% { transform: translateY(-12px); opacity: 1; }
+  100% { transform: translateY(0); opacity: 0.8; }
+}
+`, styleSheet.cssRules.length);
+
 coin: {
-  fontSize: 20,
+  fontSize: 22,
   animation: "coinFloat 2.5s infinite ease-in-out",
 },
-" },
 
   players: { marginTop: 10, fontSize: 16 },
 
