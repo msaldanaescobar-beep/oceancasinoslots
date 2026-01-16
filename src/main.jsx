@@ -24,4 +24,9 @@ style.innerHTML = `
   }
 }
 `;
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/service-worker.js");
+  });
+}
 document.head.appendChild(style);
