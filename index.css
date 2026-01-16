@@ -1,0 +1,11 @@
+@keyframes jackpotGlow {
+  0% { box-shadow: 0 0 10px gold; }
+  50% { box-shadow: 0 0 35px red; }
+  100% { box-shadow: 0 0 10px gold; }
+}
+
+@keyframes coinFloat {
+  0% { transform: translateY(0); opacity: 0.8; }
+  50% { transform: translateY(-14px); opacity: 1; }
+  100% { transform: translateY(0); opacity: 0.8; }
+}
