@@ -157,16 +157,7 @@ const styles = {
   },
 
   /* HOTSPOTS CENTRADOS (AJUSTADOS) */
-  centerGroup: {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-46%, -50%)", // 🔹 corrección visual a la derecha
-    display: "flex",
-    flexDirection: "column",
-    gap: 16,
-    zIndex: 3
-  },
+  
 
   hotspot: {
     padding: "14px 30px",
@@ -180,19 +171,28 @@ const styles = {
     boxShadow: "0 8px 22px rgba(0,0,0,0.45)",
     animation: "pulse 2.2s infinite"
   },
+  centerGroup: {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-46%, -50%)", // 👈 ajuste visual SOLO HOME
+  display: "flex",
+  flexDirection: "column",
+  gap: 16,
+  zIndex: 3
+},
 
   /* CAJAS TRANSPARENTES */
-  floatBox: {
-    margin: "22vh auto",
-    maxWidth: 340,
-    textAlign: "center",
-    color: "#fff",
-    padding: 18,
-    background: "rgba(0,0,0,0.35)",
-    backdropFilter: "blur(6px)",
-    borderRadius: 16,
-    zIndex: 3
-  },
+  centerGroup: {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-46%, -50%)", // 👈 ajuste visual SOLO HOME
+  display: "flex",
+  flexDirection: "column",
+  gap: 16,
+  zIndex: 3
+},
 
   input: {
     width: "100%",
