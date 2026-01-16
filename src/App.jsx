@@ -147,46 +147,47 @@ const styles = {
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    width: 320,
-    height: 320,
+    width: 340,
+    height: 340,
     background:
-      "radial-gradient(circle, rgba(0,255,209,0.5), transparent 65%)",
-    filter: "blur(30px)",
+      "radial-gradient(circle, rgba(0,255,209,0.45), transparent 65%)",
+    filter: "blur(34px)",
     animation: "glow 6s infinite",
     zIndex: 1
   },
 
-  /* HOTSPOTS CENTRADOS */
+  /* HOTSPOTS CENTRADOS (AJUSTADOS) */
   centerGroup: {
     position: "absolute",
     top: "50%",
     left: "50%",
-    transform: "translate(-50%, -50%)",
+    transform: "translate(-46%, -50%)", // 🔹 corrección visual a la derecha
     display: "flex",
     flexDirection: "column",
-    gap: 18,
+    gap: 16,
     zIndex: 3
   },
 
   hotspot: {
-    padding: "16px 34px",
+    padding: "14px 30px",
     borderRadius: 16,
     border: "none",
-    background: "#00FFD1",
+    background: "#FFFFFF",           // 🔹 blanco
     color: "#04293A",
     fontWeight: "bold",
-    fontSize: 18,
+    fontSize: 16,
     cursor: "pointer",
-    animation: "pulse 2s infinite"
+    boxShadow: "0 8px 22px rgba(0,0,0,0.45)",
+    animation: "pulse 2.2s infinite"
   },
 
-  /* CAJA TRANSPARENTE */
+  /* CAJAS TRANSPARENTES */
   floatBox: {
     margin: "22vh auto",
-    maxWidth: 360,
+    maxWidth: 340,
     textAlign: "center",
     color: "#fff",
-    padding: 20,
+    padding: 18,
     background: "rgba(0,0,0,0.35)",
     backdropFilter: "blur(6px)",
     borderRadius: 16,
@@ -195,7 +196,7 @@ const styles = {
 
   input: {
     width: "100%",
-    padding: 14,
+    padding: 12,
     marginBottom: 12,
     borderRadius: 10,
     border: "none"
@@ -203,30 +204,30 @@ const styles = {
 
   button: {
     width: "100%",
-    padding: 14,
+    padding: 13,
     borderRadius: 14,
     border: "none",
     background: "#00FFD1",
     color: "#04293A",
     fontWeight: "bold",
-    fontSize: 16,
+    fontSize: 15,
     cursor: "pointer"
   },
 
-  bonus: { marginTop: 12, color: "#00FFD1" },
-  bonusBig: { color: "#00FFD1", fontSize: 28 }
+  bonus: { marginTop: 10, color: "#00FFD1" },
+  bonusBig: { color: "#00FFD1", fontSize: 26 }
 };
 
-/* ANIMACIONES */
+/* ---------------- ANIMACIONES ---------------- */
 const style = document.createElement("style");
 style.innerHTML = `
 @keyframes pulse {
-  0% { box-shadow: 0 0 0 0 rgba(0,255,209,0.6); }
-  70% { box-shadow: 0 0 0 18px rgba(0,255,209,0); }
-  100% { box-shadow: 0 0 0 0 rgba(0,255,209,0); }
+  0% { box-shadow: 0 0 0 0 rgba(255,255,255,0.6); }
+  70% { box-shadow: 0 0 0 18px rgba(255,255,255,0); }
+  100% { box-shadow: 0 0 0 0 rgba(255,255,255,0); }
 }
 @keyframes glow {
-  0%,100% { opacity: .6; }
+  0%,100% { opacity: .55; }
   50% { opacity: 1; }
 }
 `;
