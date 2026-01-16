@@ -212,4 +212,7 @@ const styles = {
 
   coinLayer: { position: "fixed", inset: 0, pointerEvents: "none" },
   coinPhysic: { position: "absolute", fontSize: 26 }
+
+  <CoinRain active={showWin || view === "home"} />
+
 };
