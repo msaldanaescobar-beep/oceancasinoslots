@@ -81,8 +81,6 @@ export default function App() {
       <div style={styles.overlay}>
         <Home playFX={playFX} triggerWin={() => setShowWin(true)} />
       </div>
-
-      <TelegramCTA />
     </div>
   );
 }
@@ -91,28 +89,31 @@ export default function App() {
 function Home({ playFX, triggerWin }) {
   const [jackpot, setJackpot] = useState(1534200);
   const [fakeWin, setFakeWin] = useState("");
+  const [seconds, setSeconds] = useState(600);
 
-  const names = ["Juan", "Carlos", "Luis", "Miguel", "Pedro"];
-  const games = ["Sweet Bonanza", "Gates of Olympus", "Ocean Slots"];
+  const users = [
+    ["Matías", "Chile", "🇨🇱"],
+    ["Andrea", "México", "🇲🇽"],
+    ["Luis", "Perú", "🇵🇪"],
+    ["Carlos", "Colombia", "🇨🇴"],
+    ["Sofía", "Argentina", "🇦🇷"]
+  ];
 
   useEffect(() => {
-    const j = setInterval(() => {
+    setInterval(() => {
       setJackpot(v => v + Math.floor(Math.random() * 500));
     }, 2000);
 
-    const f = setInterval(() => {
+    setInterval(() => {
+      const u = users[Math.floor(Math.random() * users.length)];
       setFakeWin(
-        `${names[Math.floor(Math.random() * names.length)]} ganó $${(
-          Math.random() * 80000 +
-          10000
-        ).toFixed(0)} en ${games[Math.floor(Math.random() * games.length)]}`
+        `${u[2]} ${u[0]} retiró $${(Math.random() * 20000 + 15000).toFixed(0)}`
       );
-    }, 4000);
+    }, 4500);
 
-    return () => {
-      clearInterval(j);
-      clearInterval(f);
-    };
+    setInterval(() => {
+      setSeconds(s => (s > 0 ? s - 1 : 600));
+    }, 1000);
   }, []);
 
   return (
@@ -129,34 +130,36 @@ function Home({ playFX, triggerWin }) {
         </div>
       </div>
 
+      <div style={styles.trustCopy}>
+        ✔ Pagos reales en minutos<br />
+        ✔ Atención directa por Telegram<br />
+        ✔ Casinos verificados LATAM
+      </div>
+
+      <div style={styles.timer}>
+        ⏳ Bono VIP Chile expira en{" "}
+        {String(Math.floor(seconds / 60)).padStart(2, "0")}:
+        {String(seconds % 60).padStart(2, "0")}
+      </div>
+
       <button
         style={styles.primaryBtn}
         onClick={() => {
           playFX();
           triggerWin();
           window.open(
-            `https://t.me/${TELEGRAM_USER}?text=${TELEGRAM_MSG}`,
+            `https://t.me/${ Oceancasinoslots }?text=${TELEGRAM_MSG}`,
             "_blank"
           );
         }}
       >
-        🎰 ACTIVAR BONO VIP
+        🎰 ACTIVAR BONO VIP AHORA
       </button>
-    </div>
-  );
-}
 
-/* ================= TELEGRAM CTA ================= */
-function TelegramCTA() {
-  return (
-    <a
-      href={`https://t.me/${TELEGRAM_USER}?text=${TELEGRAM_MSG}`}
-      target="_blank"
-      rel="noreferrer"
-      style={styles.telegramBtn}
-    >
-      💬 Telegram VIP
-    </a>
+      <small style={styles.small}>
+        Cupos limitados · Prioridad Chile
+      </small>
+    </div>
   );
 }
 
@@ -174,7 +177,7 @@ function CoinRain({ active }) {
       vy: Math.random() * 2 + 2
     });
 
-    let list = Array.from({ length: 20 }, createCoin);
+    let list = Array.from({ length: 18 }, createCoin);
     setCoins(list);
 
     let raf;
@@ -206,47 +209,17 @@ function CoinRain({ active }) {
 
 /* ================= STYLES ================= */
 const styles = {
-  app: {
-    minHeight: "100vh",
-    position: "relative",
-    overflow: "hidden",
-    background: "#021c2d"
-  },
-
-  video: {
-    position: "absolute",
-    inset: 0,
-    width: "100%",
-    height: "100%",
-    objectFit: "cover",
-    zIndex: 0
-  },
-
-  overlay: {
-    position: "absolute",
-    inset: 0,
-    background:
-      "linear-gradient(to bottom, rgba(0,0,0,0.35), rgba(0,0,0,0.65))",
-    zIndex: 2
-  },
+  app: { minHeight: "100vh", position: "relative", overflow: "hidden" },
+  video: { position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" },
+  overlay: { position: "absolute", inset: 0, background: "rgba(0,0,0,.55)" },
 
   topBar: { position: "absolute", top: 12, right: 12, zIndex: 20 },
   topBtn: { padding: 10, borderRadius: 10 },
 
   home: { textAlign: "center", paddingTop: "14vh", color: "#fff" },
 
-  title: {
-    fontFamily: "Cinzel",
-    fontSize: 48,
-    color: "#FFD700",
-    textShadow: "0 0 20px red"
-  },
-
-  subtitle: {
-    fontFamily: "Playfair Display",
-    fontSize: 20,
-    marginBottom: 20
-  },
+  title: { fontFamily: "Cinzel", fontSize: 48, color: "#FFD700", textShadow: "0 0 20px red" },
+  subtitle: { fontFamily: "Playfair Display", fontSize: 20 },
 
   jackpotBox: {
     border: "2px solid red",
@@ -254,76 +227,57 @@ const styles = {
     borderRadius: 20,
     margin: "20px auto",
     width: 320,
-    background: "rgba(0,0,0,0.7)"
+    background: "rgba(0,0,0,.7)"
   },
 
   jackpotLabel: { fontFamily: "Cinzel", fontSize: 18 },
-  jackpotAmount: {
-    fontFamily: "Cinzel",
-    fontSize: 42,
-    color: "gold",
-    textShadow: "0 0 12px gold"
+  jackpotAmount: { fontFamily: "Cinzel", fontSize: 42, color: "gold" },
+
+  trustCopy: { fontSize: 14, marginTop: 10, lineHeight: 1.5 },
+
+  timer: {
+    marginTop: 14,
+    fontWeight: 700,
+    color: "#ff4d4d"
   },
 
   primaryBtn: {
-    marginTop: 30,
-    padding: "20px 30px",
+    marginTop: 24,
+    padding: "18px 26px",
     borderRadius: 30,
     fontSize: 20,
     fontFamily: "Cinzel",
-    background: "linear-gradient(#FFD700, #FFB700)",
+    background: "linear-gradient(#FFD700,#FFB700)",
     border: "none",
     cursor: "pointer"
   },
+
+  small: { display: "block", marginTop: 6, opacity: .8 },
 
   fakeWinTop: {
     position: "fixed",
     top: 10,
     left: "50%",
     transform: "translateX(-50%)",
-    background: "rgba(0,0,0,0.7)",
+    background: "rgba(0,0,0,.7)",
     padding: "8px 16px",
     borderRadius: 20,
     fontSize: 14
   },
 
-  telegramBtn: {
-    position: "fixed",
-    bottom: 20,
-    right: 20,
-    background: "#229ED9",
-    color: "#fff",
-    padding: "14px 18px",
-    borderRadius: 50,
-    fontWeight: 700,
-    textDecoration: "none",
-    zIndex: 999
-  },
-
-  coinLayer: {
-    position: "fixed",
-    inset: 0,
-    pointerEvents: "none",
-    zIndex: 10
-  },
-
+  coinLayer: { position: "fixed", inset: 0, pointerEvents: "none" },
   coin: { position: "absolute", fontSize: 26 },
 
   winOverlay: {
     position: "fixed",
     inset: 0,
-    background: "rgba(0,0,0,0.9)",
+    background: "rgba(0,0,0,.9)",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     zIndex: 999
   },
 
-  winContent: {
-    color: "gold",
-    fontFamily: "Cinzel",
-    textAlign: "center"
-  },
-
+  winContent: { color: "gold", fontFamily: "Cinzel", textAlign: "center" },
   winAmount: { fontSize: 46 }
 };
