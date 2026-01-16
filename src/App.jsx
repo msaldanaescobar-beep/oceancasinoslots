@@ -163,6 +163,7 @@ function CoinRain({ active }) {
     const i = setInterval(spawn, 300);
     return () => clearInterval(i);
   }, [active]);
+<CoinRain active={showWin || view === "home"} />
 
   return (
     <div style={styles.coinLayer}>
@@ -212,7 +213,5 @@ const styles = {
 
   coinLayer: { position: "fixed", inset: 0, pointerEvents: "none" },
   coinPhysic: { position: "absolute", fontSize: 26 }
-
-  <CoinRain active={showWin || view === "home"} />
 
 };
