@@ -114,10 +114,7 @@ function Casino() {
       <h3 style={styles.bonusBig}>$10.000 CLP GRATIS</h3>
 
       <button style={styles.button}>JUGAR SLOTS</button>
-
-      <button style={{ ...styles.button, marginTop: 10 }}>
-        RULETA
-      </button>
+      <button style={{ ...styles.button, marginTop: 10 }}>RULETA</button>
 
       <button
         style={{
@@ -148,15 +145,16 @@ const styles = {
     inset: 0,
     width: "100%",
     height: "100%",
-    objectFit: "cover",
-    zIndex: 0
+    objectFit: "cover"
   },
 
   overlay: {
     position: "absolute",
     inset: 0,
     background: "rgba(0,0,0,0.4)",
-    zIndex: 2
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center"
   },
 
   glow777: {
@@ -164,78 +162,72 @@ const styles = {
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    width: 340,
-    height: 340,
+    width: 320,
+    height: 320,
     background:
-      "radial-gradient(circle, rgba(0,255,209,0.45), transparent 65%)",
-    filter: "blur(34px)",
-    animation: "glow 6s infinite",
-    zIndex: 1
+      "radial-gradient(circle, rgba(0,255,209,0.4), transparent 65%)",
+    filter: "blur(30px)",
+    animation: "glow 6s infinite"
   },
 
+  /* 🔥 CENTRADO REAL */
   centerGroup: {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-46%, -50%)",
+    width: "100%",
+    maxWidth: 320,
     display: "flex",
     flexDirection: "column",
-    gap: 14,
-    zIndex: 3
+    alignItems: "center",
+    gap: 12,
+    padding: "0 16px",
+    textAlign: "center"
   },
 
   tagline: {
     color: "#fff",
     fontSize: 13,
     opacity: 0.85,
-    textAlign: "center",
     marginBottom: 6
   },
 
-  hotspot: {
-    padding: "14px 30px",
-    borderRadius: 16,
-    border: "none",
-    background: "#FFFFFF",
-    color: "#04293A",
-    fontWeight: "bold",
-    fontSize: 15,
-    cursor: "pointer",
-    boxShadow: "0 8px 22px rgba(0,0,0,0.45)",
-    animation: "pulse 2.2s infinite"
-  },
-
   hotspotPrimary: {
-    padding: "16px 32px",
+    width: "100%",
+    padding: "14px",
     borderRadius: 18,
     border: "none",
     background: "#FFFFFF",
     color: "#04293A",
     fontWeight: "bold",
     fontSize: 16,
-    cursor: "pointer",
-    boxShadow: "0 10px 28px rgba(0,0,0,0.6)",
-    animation: "pulse 2s infinite"
+    boxShadow: "0 10px 28px rgba(0,0,0,0.6)"
+  },
+
+  hotspot: {
+    width: "100%",
+    padding: "12px",
+    borderRadius: 16,
+    border: "none",
+    background: "#FFFFFF",
+    color: "#04293A",
+    fontWeight: "bold",
+    fontSize: 14,
+    boxShadow: "0 6px 18px rgba(0,0,0,0.45)"
   },
 
   legalMini: {
-    marginTop: 10,
     fontSize: 11,
     opacity: 0.6,
     color: "#fff",
-    textAlign: "center"
+    marginTop: 8
   },
 
   floatBox: {
-    margin: "22vh auto",
     maxWidth: 340,
-    textAlign: "center",
-    color: "#fff",
     padding: 18,
     background: "rgba(0,0,0,0.35)",
     backdropFilter: "blur(6px)",
     borderRadius: 16,
-    zIndex: 3
+    textAlign: "center",
+    color: "#fff"
   },
 
   input: {
@@ -254,29 +246,22 @@ const styles = {
     background: "#00FFD1",
     color: "#04293A",
     fontWeight: "bold",
-    fontSize: 15,
-    cursor: "pointer"
+    fontSize: 15
   },
 
   bonus: { marginTop: 10, color: "#00FFD1" },
   bonusBig: { color: "#00FFD1", fontSize: 26 }
 };
 
-/* ---------------- ANIMACIONES + FEEDBACK ---------------- */
+/* ---------------- ANIMACIONES ---------------- */
 const style = document.createElement("style");
 style.innerHTML = `
-@keyframes pulse {
-  0% { box-shadow: 0 0 0 0 rgba(255,255,255,0.6); }
-  70% { box-shadow: 0 0 0 18px rgba(255,255,255,0); }
-  100% { box-shadow: 0 0 0 0 rgba(255,255,255,0); }
-}
 @keyframes glow {
-  0%,100% { opacity: .55; }
+  0%,100% { opacity: .6; }
   50% { opacity: 1; }
 }
 button:active {
-  transform: scale(0.96);
-  opacity: 0.9;
+  transform: scale(0.97);
 }
 `;
 document.head.appendChild(style);
