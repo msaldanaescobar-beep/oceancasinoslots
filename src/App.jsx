@@ -217,6 +217,43 @@ function CoinRain({ active }) {
     </div>
   );
 }
+/* ================= LIVE ACTIVITY BAR ================= */
+function LiveActivity() {
+  const [msg, setMsg] = useState("");
+
+  const messages = [
+    "Jugador de 🇨🇱 retiró $72.000",
+    "Nuevo jugador activó bono VIP",
+    "Usuario volvió a jugar hace 3 min",
+    "Jackpot sigue subiendo 💰",
+    "Mesa en vivo con cupos limitados"
+  ];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setMsg(messages[Math.floor(Math.random() * messages.length)]);
+    }, 3500);
+    return () => clearInterval(interval);
+  }, []);
+
+  if (!msg) return null;
+
+  return (
+    <div style={{
+      position: "fixed",
+      top: 60,
+      left: "50%",
+      transform: "translateX(-50%)",
+      background: "rgba(0,0,0,0.75)",
+      padding: "8px 18px",
+      borderRadius: 20,
+      fontSize: 13,
+      zIndex: 50
+    }}>
+      🔴 {msg}
+    </div>
+  );
+}
 
 /* ================= STYLES ================= */
 const styles = {
