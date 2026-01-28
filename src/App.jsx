@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 
 /* ================= CONFIG ================= */
-const TELEGRAM_USER = "Oceancasinoslots";
+const TELEGRAM_USER = "OceanCasinoVip";
 const TELEGRAM_MSG = encodeURIComponent(
   "Hola, quiero activar el bono VIP de Ocean Casino 🎰"
 );
